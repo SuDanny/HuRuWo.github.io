@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="精分道长" />
+
+
+
+<meta name="description" content="由于项目要求，实现一个自定义的AlertDialog并复选效果图如下:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义AlertDialog--嵌入Listview选择多项">
+<meta property="og:url" content="https://huruwo.github.io/2016/12/21/自定义AlertDialog/index.html">
+<meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="由于项目要求，实现一个自定义的AlertDialog并复选效果图如下:">
+<meta property="og:image" content="http://7xread.com1.z0.glb.clouddn.com/02cd94bf-d2a8-417d-ad02-b6e6ee52e826">
+<meta property="og:updated_time" content="2017-02-19T06:00:26.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义AlertDialog--嵌入Listview选择多项">
+<meta name="twitter:description" content="由于项目要求，实现一个自定义的AlertDialog并复选效果图如下:">
+<meta name="twitter:image" content="http://7xread.com1.z0.glb.clouddn.com/02cd94bf-d2a8-417d-ad02-b6e6ee52e826">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="五谷观精分道长博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>自定义AlertDialog--嵌入Listview选择多项 | 五谷观精分道长博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">精分道长</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">想写诗的程序员</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔/">生活随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于本人</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">android开发者，python爱好者。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">精分道长</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">精分道长</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">想写诗的程序员</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔/">生活随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于本人</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-自定义AlertDialog" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/21/自定义AlertDialog/" class="article-date">
+      <time datetime="2016-12-21T00:59:55.000Z" itemprop="datePublished">2016-12-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      自定义AlertDialog--嵌入Listview选择多项
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="由于项目要求，实现一个自定义的AlertDialog并复选"><a href="#由于项目要求，实现一个自定义的AlertDialog并复选" class="headerlink" title="由于项目要求，实现一个自定义的AlertDialog并复选"></a>由于项目要求，实现一个自定义的AlertDialog并复选</h1><p>效果图如下:</p>
+<p><img src="http://7xread.com1.z0.glb.clouddn.com/02cd94bf-d2a8-417d-ad02-b6e6ee52e826" alt="图片描述"></p>
+<a id="more"></a>
+<h1 id="原理自定义AlertDialog，嵌入listview"><a href="#原理自定义AlertDialog，嵌入listview" class="headerlink" title="原理自定义AlertDialog，嵌入listview"></a>原理自定义AlertDialog，嵌入listview</h1><h2 id="布局文件："><a href="#布局文件：" class="headerlink" title="布局文件："></a>布局文件：</h2><h3 id="listview–item的布局文件"><a href="#listview–item的布局文件" class="headerlink" title="listview–item的布局文件"></a>listview–item的布局文件</h3><p><strong>5个checkbox</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line">&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"</div><div class="line">    android:layout_width="match_parent"</div><div class="line">    android:layout_height="match_parent"</div><div class="line">    android:orientation="horizontal"&gt;</div><div class="line"></div><div class="line">    &lt;CheckBox</div><div class="line">        android:id="@+id/checkbox1"</div><div class="line">        android:layout_width="0dp"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:layout_weight="1" /&gt;</div><div class="line">    &lt;CheckBox</div><div class="line">        android:id="@+id/checkbox2"</div><div class="line">        android:layout_width="0dp"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:layout_weight="1" /&gt;</div><div class="line"></div><div class="line">    &lt;CheckBox</div><div class="line">        android:id="@+id/checkbox3"</div><div class="line">        android:layout_width="0dp"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:layout_weight="1" /&gt;</div><div class="line"></div><div class="line">    &lt;CheckBox</div><div class="line">        android:id="@+id/checkbox4"</div><div class="line">        android:layout_width="0dp"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:layout_weight="1" /&gt;</div><div class="line"></div><div class="line">    &lt;CheckBox</div><div class="line">        android:id="@+id/checkbox5"</div><div class="line">        android:layout_width="0dp"</div><div class="line">        android:layout_height="wrap_content"</div><div class="line">        android:layout_weight="1" /&gt;</div><div class="line">&lt;/LinearLayout&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="AlertDialog的布局文件–使用动态布局"><a href="#AlertDialog的布局文件–使用动态布局" class="headerlink" title="AlertDialog的布局文件–使用动态布局"></a>AlertDialog的布局文件–使用动态布局</h2><h3 id="函数CreateView–创建布局"><a href="#函数CreateView–创建布局" class="headerlink" title="函数CreateView–创建布局"></a>函数CreateView–创建布局</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> LinearLayout <span class="title">CreateView</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> LinearLayout linearLayoutMain = <span class="keyword">new</span> LinearLayout(<span class="keyword">this</span>);<span class="comment">//自定义一个布局文件</span></div><div class="line">    linearLayoutMain.setOrientation(LinearLayout.VERTICAL);</div><div class="line">    linearLayoutMain.setLayoutParams(<span class="keyword">new</span> ViewGroup.LayoutParams(</div><div class="line">            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));</div><div class="line">    <span class="keyword">final</span> ListView listView = <span class="keyword">new</span> ListView(<span class="keyword">this</span>);<span class="comment">//this为获取当前的上下文</span></div><div class="line">    listView.setFadingEdgeLength(<span class="number">0</span>);</div><div class="line">    listView.setId(R.id.listview);</div><div class="line"></div><div class="line">    List&lt;String&gt; initData = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=-<span class="number">5</span>;i&lt;<span class="number">17</span>;i++) &#123;</div><div class="line">        initData.add(i+<span class="string">""</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">final</span> List&lt;String[]&gt; isTrue=<span class="keyword">new</span> ArrayList&lt;String[]&gt;();</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> m = <span class="number">0</span>; m &lt; initData.size()/<span class="number">5</span>+<span class="number">1</span>; m++) &#123;</div><div class="line">        String[] strings=&#123;<span class="string">"0"</span>,<span class="string">"0"</span>,<span class="string">"0"</span>,<span class="string">"0"</span>,<span class="string">"0"</span>&#125;;</div><div class="line">        isTrue.add(strings);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    List&lt;Map&lt;String, String&gt;&gt; nameList = <span class="keyword">new</span> ArrayList&lt;Map&lt;String, String&gt;&gt;();<span class="comment">//建立一个数组存储listview上显示的数据</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> m = <span class="number">0</span>; m &lt; initData.size()/<span class="number">5</span>+<span class="number">1</span>; m++) &#123;<span class="comment">//initData为一个list类型的数据源</span></div><div class="line">        Map&lt;String, String&gt; nameMap = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            nameMap.put(<span class="string">"name1"</span>, initData.get(m * <span class="number">5</span> + <span class="number">0</span>).toString());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">            nameMap.put(<span class="string">"name1"</span>, <span class="string">"/"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            nameMap.put(<span class="string">"name2"</span>, initData.get(m * <span class="number">5</span> + <span class="number">1</span>).toString());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">            nameMap.put(<span class="string">"name2"</span>, <span class="string">"/"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            nameMap.put(<span class="string">"name3"</span>, initData.get(m * <span class="number">5</span> + <span class="number">2</span>).toString());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">            nameMap.put(<span class="string">"name3"</span>, <span class="string">"/"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            nameMap.put(<span class="string">"name4"</span>, initData.get(m * <span class="number">5</span> + <span class="number">3</span>).toString());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">            nameMap.put(<span class="string">"name4"</span>, <span class="string">"/"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            nameMap.put(<span class="string">"name5"</span>, initData.get(m * <span class="number">5</span> + <span class="number">4</span>).toString());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">            nameMap.put(<span class="string">"name5"</span>, <span class="string">"/"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        nameList.add(nameMap);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> MySimpleAdapter adapter = <span class="keyword">new</span> MySimpleAdapter(MainActivity.<span class="keyword">this</span>,isTrue,</div><div class="line">            nameList, R.layout.choose_item,</div><div class="line">            <span class="keyword">new</span> String[]&#123;<span class="string">"name1"</span>, <span class="string">"name2"</span>, <span class="string">"name3"</span>, <span class="string">"name4"</span>, <span class="string">"name5"</span>&#125;,</div><div class="line">            <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;R.id.checkbox1, R.id.checkbox2, R.id.checkbox3, R.id.checkbox4, R.id.checkbox5&#125;);</div><div class="line">    listView.setAdapter(adapter);</div><div class="line">    listView.setDividerHeight(<span class="number">2</span>);</div><div class="line">    linearLayoutMain.addView(listView);<span class="comment">//往这个布局中加入listview</span></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    CheckBox checkBox = <span class="keyword">new</span> CheckBox(<span class="keyword">this</span>);</div><div class="line">    checkBox.setText(<span class="string">"反选"</span>);</div><div class="line">    checkBox.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;isTrue.size();i++)&#123;</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;isTrue.get(i).length;j++)&#123;</div><div class="line">                    <span class="keyword">if</span>(isTrue.get(i)[j].equals(<span class="string">"0"</span>))&#123;</div><div class="line">                        isTrue.get(i)[j]=<span class="string">"1"</span>;</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">else</span> &#123;</div><div class="line">                        isTrue.get(i)[j]=<span class="string">"0"</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            Toast.makeText(getApplicationContext(),</div><div class="line">                 isTrue.get(<span class="number">0</span>)[<span class="number">1</span>].toString(), Toast.LENGTH_SHORT).show();</div><div class="line">            adapter.notifyDataSetChanged();</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    linearLayoutMain.addView(checkBox);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> linearLayoutMain;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1.设置一个list<string[]>记录按钮状态。<br>2.反选按钮修改list<string[]>,更新listview<br>3.使用自定义的simpleadapter</string[]></string[]></p>
+<h3 id="自定义的simpleadapter"><a href="#自定义的simpleadapter" class="headerlink" title="自定义的simpleadapter"></a>自定义的simpleadapter</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySimpleAdapter</span> <span class="keyword">extends</span> <span class="title">SimpleAdapter</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</div><div class="line"></div><div class="line">    Context context ;</div><div class="line">    List&lt;String[]&gt; isTrue;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MySimpleAdapter</span><span class="params">(Context context,List&lt;String[]&gt; isTrue,</span></span></div><div class="line">                           List&lt;? extends Map&lt;String, ?&gt;&gt; data, <span class="keyword">int</span> resource, String[] from,</div><div class="line">                           <span class="keyword">int</span>[] to) &#123;</div><div class="line">        <span class="keyword">super</span>(context, data, resource, from, to);</div><div class="line">        <span class="keyword">this</span>.context = context ;</div><div class="line">        <span class="keyword">this</span>.isTrue=isTrue;</div><div class="line">        <span class="comment">// TODO Auto-generated constructor stub</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/* (non-Javadoc)</span></div><div class="line">     * @see android.widget.SimpleAdapter#getView(int, android.view.View, android.view.ViewGroup)</div><div class="line">     */</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        View view= <span class="keyword">super</span>.getView(position, convertView, parent);</div><div class="line">        String[] isCheck=isTrue.get(position);</div><div class="line"></div><div class="line">        CheckBox checkBox1=(CheckBox) view.findViewById(R.id.checkbox1);</div><div class="line">        CheckBox checkBox2=(CheckBox) view.findViewById(R.id.checkbox2);</div><div class="line">        CheckBox checkBox3=(CheckBox) view.findViewById(R.id.checkbox3);</div><div class="line">        CheckBox checkBox4=(CheckBox) view.findViewById(R.id.checkbox4);</div><div class="line">        CheckBox checkBox5=(CheckBox) view.findViewById(R.id.checkbox5);</div><div class="line"></div><div class="line"></div><div class="line">        checkBox1.setTag(position);</div><div class="line">        checkBox2.setTag(position);</div><div class="line">        checkBox3.setTag(position);</div><div class="line">        checkBox4.setTag(position);</div><div class="line">        checkBox5.setTag(position);</div><div class="line">        checkBox1.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        checkBox2.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        checkBox3.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        checkBox4.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        checkBox5.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        checkBox1.setChecked(Checked(isCheck[<span class="number">0</span>]));</div><div class="line">        checkBox2.setChecked(Checked(isCheck[<span class="number">1</span>]));</div><div class="line">        checkBox3.setChecked(Checked(isCheck[<span class="number">2</span>]));</div><div class="line">        checkBox4.setChecked(Checked(isCheck[<span class="number">3</span>]));</div><div class="line">        checkBox5.setChecked(Checked(isCheck[<span class="number">4</span>]));</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">return</span> view;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> Context <span class="title">getApplicationContext</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// TODO Auto-generated method stub</span></div><div class="line">        <span class="keyword">return</span> context;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">Checked</span><span class="params">(String s)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(s.equals(<span class="string">"0"</span>))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">saveChecked</span><span class="params">(String s)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(s.equals(<span class="string">"0"</span>))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"1"</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"0"</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> List&lt;String[]&gt; getIstrue()&#123;</div><div class="line">        <span class="keyword">return</span> isTrue;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</div><div class="line">        <span class="keyword">switch</span> (view.getId())&#123;</div><div class="line">            <span class="keyword">case</span> R.id.checkbox1:</div><div class="line">                CheckBox checkBox1=(CheckBox)view;</div><div class="line">                <span class="keyword">if</span>(checkBox1.isChecked()) &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">0</span>] =<span class="string">"1"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">0</span>] =<span class="string">"0"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> R.id.checkbox2:</div><div class="line">                CheckBox checkBox2=(CheckBox)view;</div><div class="line">                <span class="keyword">if</span>(checkBox2.isChecked()) &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">1</span>] =<span class="string">"1"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">1</span>] =<span class="string">"0"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> R.id.checkbox3:</div><div class="line">                CheckBox checkBox3=(CheckBox)view;</div><div class="line">                <span class="keyword">if</span>(checkBox3.isChecked()) &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">2</span>] =<span class="string">"1"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">2</span>] =<span class="string">"0"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> R.id.checkbox4:</div><div class="line">                CheckBox checkBox4=(CheckBox)view;</div><div class="line">                <span class="keyword">if</span>(checkBox4.isChecked()) &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">3</span>] =<span class="string">"1"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">3</span>] =<span class="string">"0"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> R.id.checkbox5:</div><div class="line">                CheckBox checkBox5=(CheckBox)view;</div><div class="line">                <span class="keyword">if</span>(checkBox5.isChecked()) &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">4</span>] =<span class="string">"1"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">else</span> &#123;</div><div class="line">                    isTrue.get((<span class="keyword">int</span>) view.getTag())[<span class="number">4</span>] =<span class="string">"0"</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">default</span>:</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="创建AlretDialog，注意点击事件"><a href="#创建AlretDialog，注意点击事件" class="headerlink" title="创建AlretDialog，注意点击事件"></a>创建AlretDialog，注意点击事件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> LinearLayout linearLayout=CreateView();</div><div class="line">                <span class="keyword">final</span> AlertDialog dialog = <span class="keyword">new</span> AlertDialog.Builder(MainActivity.<span class="keyword">this</span>)</div><div class="line">                        .setTitle(<span class="string">"选择对应的层站"</span>).setView(linearLayout)<span class="comment">//在这里把写好的这个listview的布局加载dialog中</span></div><div class="line">                        .setPositiveButton(<span class="string">"确定"</span>, <span class="keyword">new</span> DialogInterface.OnClickListener() &#123;</div><div class="line">                            <span class="meta">@Override</span></div><div class="line">                            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(DialogInterface dialogInterface, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">                            ListView listView=(ListView) linearLayout.findViewById(R.id.listview);</div><div class="line">                             MySimpleAdapter mySimpleAdapter=(MySimpleAdapter) listView.getAdapter();</div><div class="line"></div><div class="line"></div><div class="line">                                Toast.makeText(getApplicationContext(),</div><div class="line">                                        mySimpleAdapter.getIstrue().get(<span class="number">0</span>)[<span class="number">0</span>]+mySimpleAdapter.getIstrue().get(<span class="number">0</span>)[<span class="number">1</span>]+mySimpleAdapter.getIstrue().get(<span class="number">0</span>)[<span class="number">2</span>], Toast.LENGTH_LONG).show();</div><div class="line"></div><div class="line">                            &#125;</div><div class="line">                        &#125;).setNegativeButton(<span class="string">"取消"</span>, <span class="keyword">new</span> DialogInterface.OnClickListener() &#123;</div><div class="line"></div><div class="line">                            <span class="meta">@Override</span></div><div class="line">                            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(DialogInterface dialog, <span class="keyword">int</span> which)</span> </span>&#123;</div><div class="line">                                <span class="comment">// TODO Auto-generated method stub</span></div><div class="line"></div><div class="line">                            &#125;</div><div class="line">                        &#125;).create();</div><div class="line">                dialog.setCanceledOnTouchOutside(<span class="keyword">false</span>);<span class="comment">//使除了dialog以外的地方不能被点击</span></div><div class="line">                dialog.show();</div></pre></td></tr></table></figure>
+<p>注意:布局文件要在点击事件里面创建，既每次都先建一个布局文件，然后再引用。<br>否则会有异常。</p>
+<p>mySimpleAdapter.getIstrue()这个方法是得到选择结果的字符串，可以对应进行处理。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2016-12-21, 08:59:55</p>
+        <p><span>最后更新:</span>2017-02-19, 14:00:26</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/21/自定义AlertDialog/" title="自定义AlertDialog--嵌入Listview选择多项">https://huruwo.github.io/2016/12/21/自定义AlertDialog/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2016/12/21/自定义AlertDialog/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/31/再见2016-写给即将到来的2017/">
+                    再见2016,写给即将到来的2017
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/02/Android动画学习分析与实践/">
+                    Android动画学习分析与实践(1)
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#由于项目要求，实现一个自定义的AlertDialog并复选"><span class="toc-number">1.</span> <span class="toc-text">由于项目要求，实现一个自定义的AlertDialog并复选</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#原理自定义AlertDialog，嵌入listview"><span class="toc-number">2.</span> <span class="toc-text">原理自定义AlertDialog，嵌入listview</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#布局文件："><span class="toc-number">2.1.</span> <span class="toc-text">布局文件：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#listview–item的布局文件"><span class="toc-number">2.1.1.</span> <span class="toc-text">listview–item的布局文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AlertDialog的布局文件–使用动态布局"><span class="toc-number">2.2.</span> <span class="toc-text">AlertDialog的布局文件–使用动态布局</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数CreateView–创建布局"><span class="toc-number">2.2.1.</span> <span class="toc-text">函数CreateView–创建布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义的simpleadapter"><span class="toc-number">2.2.2.</span> <span class="toc-text">自定义的simpleadapter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建AlretDialog，注意点击事件"><span class="toc-number">2.3.</span> <span class="toc-text">创建AlretDialog，注意点击事件</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"自定义AlertDialog--嵌入Listview选择多项　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/21/自定义AlertDialog/" data-title="自定义AlertDialog--嵌入Listview选择多项" data-url="https://huruwo.github.io/2016/12/21/自定义AlertDialog/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/31/再见2016-写给即将到来的2017/" title="上一篇: 再见2016,写给即将到来的2017">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/02/Android动画学习分析与实践/" title="下一篇: Android动画学习分析与实践(1)">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 精分道长
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

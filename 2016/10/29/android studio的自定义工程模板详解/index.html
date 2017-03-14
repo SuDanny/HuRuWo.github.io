@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="精分道长" />
+
+
+
+<meta name="description" content="前言最近看到有关技术博客，发现了关于androidstudio的模板的有关文章，表示感兴趣。参考资料:Android Studio自定义模板 写页面竟然可以如此轻松包括文中的引用部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android studio的自定义工程模板详解---让你开发神速的技巧">
+<meta property="og:url" content="https://huruwo.github.io/2016/10/29/android studio的自定义工程模板详解/index.html">
+<meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="前言最近看到有关技术博客，发现了关于androidstudio的模板的有关文章，表示感兴趣。参考资料:Android Studio自定义模板 写页面竟然可以如此轻松包括文中的引用部分。">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-439b81334586e3da?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-b929572d9ff47715.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-4d4b620f44960be2.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-ec63bfd451bf1c8a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-fdcb7fb6cafbda0f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-3494655e7bc4468c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-cc0d2613a8928b6f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2898615-306877cd1c74ab7f.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2016-10-31T02:04:52.294Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android studio的自定义工程模板详解---让你开发神速的技巧">
+<meta name="twitter:description" content="前言最近看到有关技术博客，发现了关于androidstudio的模板的有关文章，表示感兴趣。参考资料:Android Studio自定义模板 写页面竟然可以如此轻松包括文中的引用部分。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2898615-439b81334586e3da?imageMogr2/auto-orient/strip">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="五谷观精分道长博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>android studio的自定义工程模板详解---让你开发神速的技巧 | 五谷观精分道长博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">精分道长</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">想写诗的程序员</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔/">生活随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于本人</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">android开发者，python爱好者。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">精分道长</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">精分道长</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">想写诗的程序员</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔/">生活随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于本人</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-android studio的自定义工程模板详解" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/29/android studio的自定义工程模板详解/" class="article-date">
+      <time datetime="2016-10-29T07:19:56.000Z" itemprop="datePublished">2016-10-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      android studio的自定义工程模板详解---让你开发神速的技巧
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近看到有关技术博客，发现了关于androidstudio的模板的有关文章，表示感兴趣。<br>参考资料:<a href="http://blog.csdn.net/lmj623565791/article/details/51635533" target="_blank" rel="external">Android Studio自定义模板 写页面竟然可以如此轻松</a><br>包括文中的引用部分。<br><a id="more"></a></p>
+<h1 id="关于自定义模板"><a href="#关于自定义模板" class="headerlink" title="关于自定义模板"></a>关于自定义模板</h1><p>在新建Activity的时候都有许多的模板供我们选择，大牛可以自定义模板，减少开发时候的重复工作。<br><strong>比如这样:</strong><br><img src="http://upload-images.jianshu.io/upload_images/2898615-439b81334586e3da?imageMogr2/auto-orient/strip" alt="图片来自鸿洋的csdn博客"></p>
+<p>其实模板不仅限于activity 包括图片自由 布局文件 fragment service 以及一个类都可以制作成模板。</p>
+<p>这里只想看下Activity模板:</p>
+<h1 id="模板制作学习"><a href="#模板制作学习" class="headerlink" title="模板制作学习"></a>模板制作学习</h1><p>分为三个步骤:</p>
+<ol>
+<li>分析系统模板</li>
+<li>改写系统模板</li>
+<li>自己创造模板</li>
+</ol>
+<h2 id="分析和改写系统模板"><a href="#分析和改写系统模板" class="headerlink" title="分析和改写系统模板"></a>分析和改写系统模板</h2><p>Activity的模板地址在AS的<code>plugins\android\lib\templates\activities</code>目录下:<br>比如我的电脑在<br><code>C:\Program Files\Android\Android Studio\plugins\android\lib\templates\activities</code></p>
+<p>Login界面用的比较多，就从他开始吧。</p>
+<p>点开文件夹，看到以下目录:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2898615-b929572d9ff47715.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="模板LoginActivity.png"></p>
+<p>下面来一一分析这些文件:</p>
+<h3 id="template-xml"><a href="#template-xml" class="headerlink" title="template.xml"></a>template.xml</h3><p>这个是模板配置文件，打开可以看到:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">template</span></span></div><div class="line">    <span class="attr">format</span>=<span class="string">"5"</span></div><div class="line">    <span class="attr">revision</span>=<span class="string">"6"</span></div><div class="line">    <span class="attr">name</span>=<span class="string">"Login Activity"</span></div><div class="line">    <span class="attr">description</span>=<span class="string">"Creates a new login activity, allowing users to optionally sign in with Google+ or enter an email address and password to log in to or register with your application."</span></div><div class="line">    <span class="attr">requireAppTheme</span>=<span class="string">"true"</span></div><div class="line">    <span class="attr">minApi</span>=<span class="string">"8"</span></div><div class="line">    <span class="attr">minBuildApi</span>=<span class="string">"14"</span>&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span> <span class="attr">name</span>=<span class="string">"android-support-v4"</span> <span class="attr">revision</span>=<span class="string">"8"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">value</span>=<span class="string">"Activity"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">formfactor</span> <span class="attr">value</span>=<span class="string">"Mobile"</span> /&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"activityClass"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"Activity Name"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"class|unique|nonempty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"LoginActivity"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"The name of the activity class to create"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"layoutName"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"Layout Name"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"layout|unique|nonempty"</span></div><div class="line">        <span class="attr">suggest</span>=<span class="string">"$&#123;activityToLayout(activityClass)&#125;"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"activity_login"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"The name of the layout to create for the activity"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"activityTitle"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"Title"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"nonempty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"Sign in"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"The name of the activity."</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"parentActivityClass"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"Hierarchical Parent"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"activity|exists|empty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">""</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"The hierarchical parent activity, used to provide a default implementation for the 'Up' button"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"packageName"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"Package name"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"package"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"com.mycompany.myapp"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">thumbs</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">thumb</span>&gt;</span>template_login_activity.png<span class="tag">&lt;/<span class="name">thumb</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">thumbs</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">globals</span> <span class="attr">file</span>=<span class="string">"globals.xml.ftl"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">execute</span> <span class="attr">file</span>=<span class="string">"recipe.xml.ftl"</span> /&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<ol>
+<li><p>最外面的template标签写的是基本的配置：包括模板名，描述，是否请求系统主题等等。我们可以将其修改为中文。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">template</span></span></div><div class="line">    <span class="attr">format</span>=<span class="string">"5"</span></div><div class="line">    <span class="attr">revision</span>=<span class="string">"6"</span></div><div class="line">    <span class="attr">name</span>=<span class="string">"登陆界面"</span></div><div class="line">    <span class="attr">description</span>=<span class="string">"创建一个新的登陆界面"</span></div><div class="line">    <span class="attr">requireAppTheme</span>=<span class="string">"true"</span></div><div class="line">    <span class="attr">minApi</span>=<span class="string">"8"</span></div><div class="line">    <span class="attr">minBuildApi</span>=<span class="string">"14"</span>&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>parameter标签<br>参数，也就是要在创建的时候自己设置的东西。每一个 parameter标签对应一个参数。这些参数会显示在创建页面上。也修改为中文。</p>
+<blockquote>
+<p>. id ：唯一标识，最终通过该属性的值，获取用户输入值（文本框内容，是否选中）<br>. name：界面上的类似label的提示语<br>. type : 输入值类型<br>. constraints：填写值的约束<br>. suggest：建议值，比如填写ActivityName的时候，会给出一个布局文件的建议值。<br>. default:默认值<br>. help:底部显示的提升语</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"activityClass"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"活动类名"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"class|unique|nonempty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"LoginActivity"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"填写所创建的活动类的名称"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"layoutName"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"布局文件名"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"layout|unique|nonempty"</span></div><div class="line">        <span class="attr">suggest</span>=<span class="string">"$&#123;activityToLayout(activityClass)&#125;"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"activity_login"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"填写所创建的布局文件的名称"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"activityTitle"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"标题栏标题"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"nonempty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"Sign in"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"The name of the activity."</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"parentActivityClass"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"父活动类"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"activity|exists|empty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">""</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"配置父活动类，用于返回上一级按钮"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"packageName"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"包名"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"package"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"com.mycompany.myapp"</span> /&gt;</div></pre></td></tr></table></figure>
+<p>3.thumbs<br>里面放置了样例图,可以尝试更换。<br>4.最后指定了两个引用文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">globals</span> <span class="attr">file</span>=<span class="string">"globals.xml.ftl"</span> /&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">execute</span> <span class="attr">file</span>=<span class="string">"recipe.xml.ftl"</span> /&gt;</span></div></pre></td></tr></table></figure></p>
+<p>可以测试一下修改的效果:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2898615-4d4b620f44960be2.gif?imageMogr2/auto-orient/strip" alt="my.gif"></p>
+<h2 id="globals-xml-ftl和recipe-xml-ftl"><a href="#globals-xml-ftl和recipe-xml-ftl" class="headerlink" title="globals.xml.ftl和recipe.xml.ftl"></a>globals.xml.ftl和recipe.xml.ftl</h2><p>在这之前先了解一下ftl结尾的文件是什么:</p>
+<blockquote>
+<p>freemarker的文件一般以后缀ftl.<br>　　freemarker确实是不错的模版语言引擎，尤其是处理对象图很方便，处理xml也很方便，还支持xpath<br>　　FreeMarker 是一个模版引擎，一个基于文本的模板输出工具（生成任意的HTML表单代码）。它是一个Java package，面向Java程序员的class library。它本身并不是针对最终用户的应用，而是允许程序员将其嵌入到他们的产品中。<br>　　FreeMarker被设计用来生成HTML Web页面，特别是基于MVC（Model View Controller）模式的应用程序。使用 MVC 模式作为动态的WEB页面的想法，是为了分隔页面设计者 (HTML 设计者) 和程序员。.每个人做自己擅长的那一部分。设计者可以不通过程序员的改变或修改代码来改变网页的样子，因为应用逻辑(Java程序)和页面设计（FreeMarker 模版）是分开的。模板不会被复杂繁琐的程序框架所破坏。即使当一个项目的程序员和HIMTL页面的制作者是同一个人时，这种分隔也是很有用，因为这样有助于保持应用的清晰并易于维护。</p>
+</blockquote>
+<p>不知道大家写过网页没有，不管是jsp还是asp还是asp.net<br>都会有这种在标签语言里面插入编程语言的方式，大概类似。</p>
+<p>关于ftl的语法:</p>
+<blockquote>
+<p>组成部分<br>一、整体结构<br>1、注释：&lt;#–注释内容–&gt;，不会输出。<br>2、文本：直接输出。<br>3、interpolation:由 ${var} 或 #{var} 限定，由计算值代替输出。<br>4、FTL标记<br>二、指令：<br>freemarker指令有两种：<br>1、预定义指令：引用方式为&lt;#指令名称&gt;<br>2、用户定义指令：引用方式为&lt;@指令名称&gt;，引用用户定义指令时须将#换为@。<br>注意：如果使用不存在的指令，FreeMarker不会使用模板输出，而是产生一个错误消息。<br>freemarker指令由FTL标记来引用，FTL标记和HTML标记类似，名字前加#来加 以区分。如HTML标记的形式为</p><h1></h1>则FTL标记的形式是&lt;#list&gt;&lt; /#list&gt;（此处h1标记和list指令没有任何功能上的对应关系，只是做为说明使用一下）。<br>有三种FTL标记：<br>1)、开始标记：&lt;#指令名称&gt;<br>2)、结束标记：&lt;/#指令名称&gt;<br>3)、空标记：&lt;#指令名称/&gt;<br>注意：<br>1) FTL会忽略标记之中的空格，但是，&lt;#和指令 与 &lt;/#和指令 之间不能有空格。<br>2) FTL标记不能够交叉，必须合理嵌套。每个开始标记对应一个结束标记，层层嵌套。 如：<br>&lt;#list&gt;<p></p>
+<p><li><br>${数据}<br>&lt;#if 变量&gt;</li></p>
+<p></p><p>game over!</p><br>&lt;/#if&gt;<br><br>&lt;/#list&gt;<br>注意事项：<br>1)、FTL对大小写敏感。 所以使用的标记及interpolation要注意大小写。name与NAME就是不同的对象。&lt;#list&gt;是正确的标记，而&lt;#List&gt;则不是。<br>2)、interpolation只能在文本部分使用，不能位于FTL标记内。如&lt;#if ${var}&gt;是错误的，正确的方法是：&lt;#if var&gt;,而且此处var必须为布尔值。<br>3)、FTL标记不能位于另一个FTL标记内部，注释例外。注释可以位于标记及interpolation内部。<p></p>
+</blockquote>
+<p>其实只要知道if即可以了，这里只用if来判断。</p>
+<h3 id="globals-xml-ftl"><a href="#globals-xml-ftl" class="headerlink" title="globals.xml.ftl"></a>globals.xml.ftl</h3><p>还要引入的依赖和包。<br>定义了全局变量，并引用了一个内置的通用globals.xml.ftl<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">globals</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">global</span> <span class="attr">id</span>=<span class="string">"hasNoActionBar"</span> <span class="attr">type</span>=<span class="string">"boolean"</span> <span class="attr">value</span>=<span class="string">"false"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">global</span> <span class="attr">id</span>=<span class="string">"isLauncher"</span> <span class="attr">type</span>=<span class="string">"boolean"</span> <span class="attr">value</span>=<span class="string">"$&#123;isNewProject?string&#125;"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">global</span> <span class="attr">id</span>=<span class="string">"includePermissionCheck"</span> <span class="attr">type</span>=<span class="string">"boolean"</span> <span class="attr">value</span>=<span class="string">"$&#123;(targetApi gte 23)?string&#125;"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">global</span> <span class="attr">id</span>=<span class="string">"GenericStringArgument"</span> <span class="attr">type</span>=<span class="string">"string"</span> <span class="attr">value</span>=<span class="string">"&lt;#if buildApi lt 19&gt;String&lt;/#if&gt;"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">#include</span> "<span class="attr">..</span>/<span class="attr">common</span>/<span class="attr">common_globals.xml.ftl</span>" /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">globals</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>recipe.xml.ftl<br>指定资源文件的路径并相应的生成到我们的项目目录去：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">recipe</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">#if</span> <span class="attr">appCompat</span> &amp;&amp; !(<span class="attr">hasDependency</span>('<span class="attr">com.android.support:appcompat-v7</span>'))&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">dependency</span> <span class="attr">mavenUrl</span>=<span class="string">"com.android.support:appcompat-v7:$&#123;buildApi&#125;.+"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">#if</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">#if</span> (<span class="attr">buildApi</span> <span class="attr">gte</span> <span class="attr">22</span>) &amp;&amp; <span class="attr">appCompat</span> &amp;&amp; !(<span class="attr">hasDependency</span>('<span class="attr">com.android.support:design</span>'))&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span> <span class="attr">mavenUrl</span>=<span class="string">"com.android.support:design:$&#123;buildApi&#125;.+"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">#if</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">"root/AndroidManifest.xml.ftl"</span></span></div><div class="line">             <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(manifestOut)&#125;/AndroidManifest.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">"root/res/values/dimens.xml"</span></span></div><div class="line">             <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/values/dimens.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">"root/res/values/strings.xml.ftl"</span></span></div><div class="line">             <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/values/strings.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">"root/res/layout/activity_login.xml.ftl"</span></span></div><div class="line">                   <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/layout/$&#123;layoutName&#125;.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">"root/src/app_package/LoginActivity.java.ftl"</span></span></div><div class="line">                   <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(srcOut)&#125;/$&#123;activityClass&#125;.java"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">open</span> <span class="attr">file</span>=<span class="string">"$&#123;escapeXmlAttribute(srcOut)&#125;/$&#123;activityClass&#125;.java"</span> /&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">recipe</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>. copy :从root中copy文件到我们的目标目录，比如我们的模板Activity需要使用一些图标，那么可能就需要使用copy标签将这些图标拷贝到我们的项目对应文件夹。<br>. merge : 合并的意思，比如将我们使用到的strings.xml合并到我们的项目的stirngs.xml中<br>. instantiate : 和copy类似，但是可以看到上例试将ftl-&gt;java文件的，也就是说中间会通过一个步骤，将ftl中的变量都换成对应的值，那么完整的流程是ftl-&gt;freemarker process -&gt; java。<br>. open:在代码生成后，打开指定的文件，比如我们新建一个Activity后，默认就会将该Activity打开。</p>
+<p>那么整体的关系类似下图：<br><img src="http://upload-images.jianshu.io/upload_images/2898615-ec63bfd451bf1c8a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>图片来源：<a href="http://www.slideshare.net/murphonic/custom-android-code-templates-15537501" target="_blank" rel="external">http://www.slideshare.net/murphonic/custom-android-code-templates-15537501</a></p>
+</blockquote>
+<p>这里只是指定了生成的路径的文件名，但是如何生成呢，这就要根据前面创建的选项来设置生成的目标文件。</p>
+<h2 id="root文件夹"><a href="#root文件夹" class="headerlink" title="root文件夹"></a>root文件夹</h2><p>里面都是加了ftl的java文件和XML文件，所以我们用if来判断生成的方式。<br>两个步骤:<br>取值—&gt;判断–&gt;生成</p>
+<h3 id="xml文件中："><a href="#xml文件中：" class="headerlink" title="xml文件中："></a>xml文件中：</h3><p>配置文件:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" &gt;</div><div class="line"></div><div class="line">    &lt;!-- To auto-complete the email text field in the login form with the user's emails --&gt;</div><div class="line">    &lt;uses-permission android:name="android.permission.GET_ACCOUNTS" /&gt;</div><div class="line">    &lt;uses-permission android:name="android.permission.READ_PROFILE" /&gt;</div><div class="line">    &lt;uses-permission android:name="android.permission.READ_CONTACTS" /&gt;</div><div class="line"></div><div class="line">    &lt;application&gt;</div><div class="line">        &lt;activity android:name=".$&#123;activityClass&#125;"</div><div class="line">            &lt;#if isNewProject&gt;</div><div class="line">            android:label="@string/app_name"</div><div class="line">            &lt;#else&gt;</div><div class="line">            android:label="@string/title_$&#123;simpleName&#125;"</div><div class="line">            &lt;/#if&gt;</div><div class="line">            &lt;#if hasNoActionBar&gt;</div><div class="line">            android:theme="@style/$&#123;themeNameNoActionBar&#125;"</div><div class="line">            &lt;/#if&gt;</div><div class="line">            &lt;#if buildApi gte 16 &amp;&amp; parentActivityClass != ""&gt;android:parentActivityName="$&#123;parentActivityClass&#125;"&lt;/#if&gt;&gt;</div><div class="line">            &lt;#if parentActivityClass != ""&gt;</div><div class="line">            &lt;meta-data android:name="android.support.PARENT_ACTIVITY"</div><div class="line">                android:value="$&#123;parentActivityClass&#125;" /&gt;</div><div class="line">            &lt;/#if&gt;</div><div class="line">            &lt;#if isLauncher &amp;&amp; !(isLibraryProject!false)&gt;</div><div class="line">            &lt;intent-filter&gt;</div><div class="line">                &lt;action android:name="android.intent.action.MAIN" /&gt;</div><div class="line">                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;</div><div class="line">            &lt;/intent-filter&gt;</div><div class="line">            &lt;/#if&gt;</div><div class="line">        &lt;/activity&gt;</div><div class="line">    &lt;/application&gt;</div><div class="line">&lt;/manifest&gt;</div></pre></td></tr></table></figure></p>
+<p>获取值，包括设定值和全局变量:</p>
+<ol>
+<li>设定值:activityClass获取，${activityClass}<br> 全局变量:isNewProject,hasNoActionBar</li>
+<li>if判断<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;#if isNewProject&gt;</div><div class="line"> android:label="@string/app_name"</div><div class="line"> &lt;#else&gt;</div><div class="line"> android:label="@string/title_$&#123;simpleName&#125;"</div><div class="line">&lt;/#if&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="java文件中"><a href="#java文件中" class="headerlink" title="java文件中"></a>java文件中</h3><p>代码太长不贴<br>也是类似的方式:<br>比如包名引入<code>package ${packageName};</code><br>判断：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">#if</span> <span class="attr">parentActivityClass</span> != <span class="string">""</span>&gt;</span></div><div class="line"> setupActionBar();</div><div class="line"><span class="tag">&lt;/<span class="name">#if</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>最后系统根据这些东西来生成最终的文件:</p>
+<blockquote>
+<p>流程大致可用下图说明：<br><img src="http://upload-images.jianshu.io/upload_images/2898615-fdcb7fb6cafbda0f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>图片来源：<a href="http://www.slideshare.net/murphonic/custom-android-code-templates-15537501" target="_blank" rel="external">http://www.slideshare.net/murphonic/custom-android-code-templates-15537501</a></p>
+</blockquote>
+<h2 id="自己创造模板"><a href="#自己创造模板" class="headerlink" title="自己创造模板"></a>自己创造模板</h2><p>分析改写已经完成了，下面开始创造</p>
+<h3 id="写个自己的登录界面"><a href="#写个自己的登录界面" class="headerlink" title="写个自己的登录界面"></a>写个自己的登录界面</h3><p>不用完全从头开始。我们就拿LoginActivity模板来写。</p>
+<p>先写一个简单的登录系统:<br>像这样:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2898615-3494655e7bc4468c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="QQ截图20161026144605.png"></p>
+<p>把相应的文件复制到root目录下:<br>包括所用的资源文件和java文件.</p>
+<p>template修改，添加3个东西，一个是否含有记住密码选项，一个是否含有注册选项，还有一个是标题。<br>都是bool类型:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"titleString"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"标题名"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"string"</span></div><div class="line">        <span class="attr">constraints</span>=<span class="string">"nonempty"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"默认标题"</span> /&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"isRemember"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"是否含有记住密码"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"boolean"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"false"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"为真则添加一个checkbox在登录按钮上面"</span> /&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">parameter</span></span></div><div class="line">        <span class="attr">id</span>=<span class="string">"isRegiste"</span></div><div class="line">        <span class="attr">name</span>=<span class="string">"是否含有注册选项"</span></div><div class="line">        <span class="attr">type</span>=<span class="string">"boolean"</span></div><div class="line">        <span class="attr">default</span>=<span class="string">"false"</span></div><div class="line">        <span class="attr">help</span>=<span class="string">"为真则添加一个注册按钮在登录按钮上面"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<p>java文件改写，我这里没有写很多逻辑，简单的引入包名就可以了。加上布局文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> $&#123;packageName&#125;;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</div><div class="line"><span class="keyword">import</span> android.os.Bundle;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> $</span>&#123;activityClass&#125; extends $&#123;superClass&#125; &#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.$&#123;layoutName&#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里主要是layout文件要根据选项创建:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:context</span>=<span class="string">"com.example.administrator.demo.MainActivity"</span></div><div class="line">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></div><div class="line">    <span class="attr">android:background</span>=<span class="string">"#cccccc"</span></div><div class="line">    &gt;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></div><div class="line">            <span class="attr">android:padding</span>=<span class="string">"10dp"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"$&#123;titleString&#125;"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"#FF4500"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"40sp"</span></div><div class="line">            <span class="attr">android:typeface</span>=<span class="string">"monospace"</span> /&gt;</div><div class="line">        <span class="tag">&lt;<span class="name">EditText</span></span></div><div class="line">            <span class="attr">android:id</span>=<span class="string">"@+id/edt_name"</span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:background</span>=<span class="string">"@drawable/rounded_editview"</span></div><div class="line">            <span class="attr">android:drawableLeft</span>=<span class="string">"@drawable/ic_name"</span></div><div class="line">            <span class="attr">android:hint</span>=<span class="string">"输入用户名"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"30sp"</span> /&gt;</div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">View</span></span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"20dp"</span> /&gt;</div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">EditText</span></span></div><div class="line">            <span class="attr">android:id</span>=<span class="string">"@+id/edt__"</span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:background</span>=<span class="string">"@drawable/rounded_editview"</span></div><div class="line">            <span class="attr">android:drawableLeft</span>=<span class="string">"@drawable/ic_pass"</span></div><div class="line">            <span class="attr">android:hint</span>=<span class="string">"输入密码"</span></div><div class="line">            <span class="attr">android:inputType</span>=<span class="string">"textPassword"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"30sp"</span> /&gt;</div><div class="line"></div><div class="line">            <span class="tag">&lt;<span class="name">#if</span> <span class="attr">isRemember</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">CheckBox</span></span></div><div class="line">            <span class="attr">android:padding</span>=<span class="string">"20dp"</span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"记住密码"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"#000079"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"20sp"</span> /&gt;</div><div class="line">            <span class="tag">&lt;/<span class="name">#if</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">#if</span> <span class="attr">isRegiste</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"#000079"</span></div><div class="line">            <span class="attr">android:padding</span>=<span class="string">"20dp"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"没有账号?点此注册"</span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> /&gt;</div><div class="line">            <span class="tag">&lt;/<span class="name">#if</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">Button</span></span></div><div class="line">            <span class="attr">android:id</span>=<span class="string">"@+id/angry_btn"</span></div><div class="line">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">            <span class="attr">android:background</span>=<span class="string">"@drawable/bg_edittext"</span></div><div class="line">            <span class="attr">android:shadowColor</span>=<span class="string">"#A89A7B"</span></div><div class="line">            <span class="attr">android:shadowDx</span>=<span class="string">"0"</span></div><div class="line">            <span class="attr">android:shadowDy</span>=<span class="string">"0"</span></div><div class="line">            <span class="attr">android:shadowRadius</span>=<span class="string">"5"</span></div><div class="line">            <span class="attr">android:text</span>=<span class="string">"登录"</span></div><div class="line">            <span class="attr">android:textColor</span>=<span class="string">"#ffffff"</span></div><div class="line">            <span class="attr">android:textSize</span>=<span class="string">"30sp"</span> /&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>最后检查recipe文件对应的名字和目录有没有问题以及生成方式。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">"root/AndroidManifest.xml.ftl"</span></span></div><div class="line">             <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(manifestOut)&#125;/AndroidManifest.xml"</span> /&gt;</div><div class="line"></div><div class="line"></div><div class="line">     <span class="tag">&lt;<span class="name">copy</span> <span class="attr">from</span>=<span class="string">"root/res/drawable/ic_password.png"</span></span></div><div class="line">            <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/drawable/ic_password.png"</span> /&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">copy</span> <span class="attr">from</span>=<span class="string">"root/res/drawable/ic_user.png"</span></span></div><div class="line">            <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/drawable/ic_user.png"</span> /&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">"root/res/values/dimens.xml"</span></span></div><div class="line">             <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/values/dimens.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">merge</span> <span class="attr">from</span>=<span class="string">"root/res/values/strings.xml.ftl"</span></span></div><div class="line">             <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/values/strings.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">"root/res/layout/activity_login.xml.ftl"</span></span></div><div class="line">                   <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(resOut)&#125;/layout/$&#123;layoutName&#125;.xml"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">instantiate</span> <span class="attr">from</span>=<span class="string">"root/src/app_package/MainActivity.java.ftl"</span></span></div><div class="line">                   <span class="attr">to</span>=<span class="string">"$&#123;escapeXmlAttribute(srcOut)&#125;/$&#123;activityClass&#125;.java"</span> /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">open</span> <span class="attr">file</span>=<span class="string">"$&#123;escapeXmlAttribute(srcOut)&#125;/$&#123;activityClass&#125;.java"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<p>主要是两个copy 就是复制文件到目录下，然后布局文件中就可以调用了。</p>
+<p>测试:<br>这时候老板叫你开发一个登录页面，你只需要慢慢的泡一杯茶，然后点击几下鼠标。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2898615-cc0d2613a8928b6f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1460513940727641.jpg"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2898615-306877cd1c74ab7f.gif?imageMogr2/auto-orient/strip" alt="gif.gif"></p>
+<p>当然这是个简单的模板，不过各位学会了之后可以写一些符合自己需求的模板。</p>
+<h1 id="推荐一些开源的模板地址"><a href="#推荐一些开源的模板地址" class="headerlink" title="推荐一些开源的模板地址"></a>推荐一些开源的模板地址</h1><p>如果大家有时间逛github，直接搜索Android Studio Template即可。<br><a href="https://github.com/kanytu/Android-studio-material-template" target="_blank" rel="external">https://github.com/kanytu/Android-studio-material-template</a><br>A template for Android Studio to create applications with material design and Navigation Drawer.包含：MaterialNavigationDrawerActivity。</p>
+<p><a href="https://github.com/gabrielemariotti/AndroidStudioTemplate" target="_blank" rel="external">https://github.com/gabrielemariotti/AndroidStudioTemplate</a><br>包含SwipeRefreshLayout，还有一些常用的模板。</p>
+<p><a href="https://github.com/intrications/material-design-icons-adt-template" target="_blank" rel="external">https://github.com/intrications/material-design-icons-adt-template</a><br>用于创建Material Design Icon，可以非常方便的创建Icon，再也不需要自己去找下载各种尺寸了。</p>
+<p><a href="https://github.com/WanAndroid/AndroidStudioTemplates" target="_blank" rel="external">hoangyang的例子</a><br>一个ViewPage的模板</p>
+<h1 id="最后的总结"><a href="#最后的总结" class="headerlink" title="最后的总结"></a>最后的总结</h1><ol>
+<li>模板虽好，切勿滥用</li>
+<li>写模板尽量写的通用一些。一些具体的东西还是要手写。</li>
+<li>注意备份模板，重装系统的软件都会丢失模板。</li>
+</ol>
+<p>我的开发工具用的是sublime2，理论上任何一个文本编辑器都可以，但是我有Notepad++会有格式上的报错。</p>
+<p>附上本文中我写的模板，当然我也会继续开发好用的模板上传。<br><a href="https://github.com/HuRuWo/Android-Studio-Template" target="_blank" rel="external">https://github.com/HuRuWo/Android-Studio-Template</a><br>放置到Android Studio\plugins\android\lib\templates\activities 目录下，重启as即可。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2016-10-29, 15:19:56</p>
+        <p><span>最后更新:</span>2016-10-31, 10:04:52</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/10/29/android studio的自定义工程模板详解/" title="android studio的自定义工程模板详解---让你开发神速的技巧">https://huruwo.github.io/2016/10/29/android studio的自定义工程模板详解/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2016/10/29/android studio的自定义工程模板详解/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">
+                    使用GitHub+Hexo快速搭建个人技术博客
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于自定义模板"><span class="toc-number">2.</span> <span class="toc-text">关于自定义模板</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模板制作学习"><span class="toc-number">3.</span> <span class="toc-text">模板制作学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分析和改写系统模板"><span class="toc-number">3.1.</span> <span class="toc-text">分析和改写系统模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#template-xml"><span class="toc-number">3.1.1.</span> <span class="toc-text">template.xml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#globals-xml-ftl和recipe-xml-ftl"><span class="toc-number">3.2.</span> <span class="toc-text">globals.xml.ftl和recipe.xml.ftl</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text"></span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#globals-xml-ftl"><span class="toc-number">4.0.1.</span> <span class="toc-text">globals.xml.ftl</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#root文件夹"><span class="toc-number">4.1.</span> <span class="toc-text">root文件夹</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xml文件中："><span class="toc-number">4.1.1.</span> <span class="toc-text">xml文件中：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java文件中"><span class="toc-number">4.1.2.</span> <span class="toc-text">java文件中</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自己创造模板"><span class="toc-number">4.2.</span> <span class="toc-text">自己创造模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#写个自己的登录界面"><span class="toc-number">4.2.1.</span> <span class="toc-text">写个自己的登录界面</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#推荐一些开源的模板地址"><span class="toc-number">5.</span> <span class="toc-text">推荐一些开源的模板地址</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最后的总结"><span class="toc-number">6.</span> <span class="toc-text">最后的总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"android studio的自定义工程模板详解---让你开发神速的技巧　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/29/android studio的自定义工程模板详解/" data-title="android studio的自定义工程模板详解---让你开发神速的技巧" data-url="https://huruwo.github.io/2016/10/29/android studio的自定义工程模板详解/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/" title="上一篇: 使用GitHub+Hexo快速搭建个人技术博客">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 精分道长
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

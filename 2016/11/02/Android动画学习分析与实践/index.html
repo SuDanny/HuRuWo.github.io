@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="精分道长" />
+
+
+
+<meta name="description" content="前言Android进阶必须学习的就是动画和自定义View(ViewGroup)了。在学习完基本概念之后，仍然发现自己不能很好的写出动画。我觉的分析和模仿别人的动画是一个很好的思路。
+关于基础可以看教程:Android 动画总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android动画学习分析与实践(1)">
+<meta property="og:url" content="https://huruwo.github.io/2016/11/02/Android动画学习分析与实践/index.html">
+<meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="前言Android进阶必须学习的就是动画和自定义View(ViewGroup)了。在学习完基本概念之后，仍然发现自己不能很好的写出动画。我觉的分析和模仿别人的动画是一个很好的思路。
+关于基础可以看教程:Android 动画总结">
+<meta property="og:image" content="http://7xread.com1.z0.glb.clouddn.com/60a370ab-2c11-431c-b177-5ac84544c634">
+<meta property="og:image" content="http://7xread.com1.z0.glb.clouddn.com/acbc842d-87ca-4933-a4ec-c2b19235fee6">
+<meta property="og:image" content="http://7xread.com1.z0.glb.clouddn.com/858d7ebc-d299-4888-9a56-a0245919a1f3">
+<meta property="og:updated_time" content="2017-02-19T05:58:51.878Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android动画学习分析与实践(1)">
+<meta name="twitter:description" content="前言Android进阶必须学习的就是动画和自定义View(ViewGroup)了。在学习完基本概念之后，仍然发现自己不能很好的写出动画。我觉的分析和模仿别人的动画是一个很好的思路。
+关于基础可以看教程:Android 动画总结">
+<meta name="twitter:image" content="http://7xread.com1.z0.glb.clouddn.com/60a370ab-2c11-431c-b177-5ac84544c634">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="五谷观精分道长博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Android动画学习分析与实践(1) | 五谷观精分道长博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">精分道长</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">想写诗的程序员</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔/">生活随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于本人</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">android开发者，python爱好者。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">精分道长</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">精分道长</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">想写诗的程序员</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔/">生活随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于本人</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-Android动画学习分析与实践" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/02/Android动画学习分析与实践/" class="article-date">
+      <time datetime="2016-11-02T02:36:01.000Z" itemprop="datePublished">2016-11-02</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android动画学习分析与实践(1)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Android进阶必须学习的就是动画和自定义View(ViewGroup)了。在学习完基本概念之后，仍然发现自己不能很好的写出动画。<br>我觉的分析和模仿别人的动画是一个很好的思路。</p>
+<p>关于基础可以看教程:<br><a href="http://www.jianshu.com/p/420629118c10" target="_blank" rel="external">Android 动画总结</a><br><a id="more"></a><br>以及属性动画:</p>
+<p><a href="http://blog.csdn.net/lmj623565791/article/details/38067475" target="_blank" rel="external"> Android 属性动画（Property Animation） 完全解析 （上）</a></p>
+<p><a href="http://blog.csdn.net/lmj623565791/article/details/38092093" target="_blank" rel="external"> Android 属性动画（Property Animation） 完全解析 （下）</a></p>
+<p><a href="http://blog.csdn.net/lmj623565791/article/details/24252901/" target="_blank" rel="external"> Android 自定义View (一)</a></p>
+<p><a href="http://blog.csdn.net/lmj623565791/article/details/24300125" target="_blank" rel="external">Android 自定义View (二) 进阶</a></p>
+<p><a href="http://blog.csdn.net/lmj623565791/article/details/24500107" target="_blank" rel="external"> Android 自定义View (三) 圆环交替 等待效果</a></p>
+<p><a href="http://blog.csdn.net/lmj623565791/article/details/24529807" target="_blank" rel="external"> Android 自定义View (四) 视频音量调控</a></p>
+<h1 id="实例分析1—直播点赞动画"><a href="#实例分析1—直播点赞动画" class="headerlink" title="实例分析1—直播点赞动画"></a>实例分析1—直播点赞动画</h1><p>参考资料<a href="http://blog.csdn.net/android_freshman/article/details/52370475?locationNum=9" target="_blank" rel="external">android 飘心动画(直播点赞)效果</a></p>
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="http://7xread.com1.z0.glb.clouddn.com/60a370ab-2c11-431c-b177-5ac84544c634" alt="图片描述"></p>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>FlowLikeView.java</p>
+<p><strong>首先重写一个GroupView继承RelativeLayout 以及变量添加</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlowLikeView</span> <span class="keyword">extends</span> <span class="title">RelativeLayout</span> </span>&#123;</div><div class="line"><span class="keyword">private</span> List&lt;Drawable&gt; mLikeDrawables; <span class="comment">// 图片的集合</span></div><div class="line">    <span class="keyword">private</span> LayoutParams mLayoutParams; <span class="comment">// 用于设置动画对象的位置参数</span></div><div class="line">    <span class="keyword">private</span> Random mRandom; <span class="comment">// 用于产生随机数,如生成随机图片</span></div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mViewWidth; <span class="comment">// 控件的宽度</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mViewHeight; <span class="comment">// 控件的高度</span></div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mPicWidth; <span class="comment">// 图片的宽度</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mPicHeight; <span class="comment">// 图片的高度</span></div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mChildViewHeight; <span class="comment">// 在 XML 布局文件中添加的子View的总高度</span></div></pre></td></tr></table></figure>
+<p><strong>三个构造函数:在第三个初始化数据</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">FlowLikeView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FlowLikeView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>(context, attrs, <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FlowLikeView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line"></div><div class="line">        initParams();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initParams</span><span class="params">()</span> </span>&#123;</div><div class="line">        mLikeDrawables = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart0));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart1));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart2));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart3));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart4));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart5));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart6));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart7));</div><div class="line">        mLikeDrawables.add(generateDrawable(R.drawable.heart8));</div><div class="line"></div><div class="line">        <span class="comment">// 获取图片的宽高, 由于图片大小一致,故直接获取第一张图片的宽高</span></div><div class="line">        mPicWidth = mLikeDrawables.get(<span class="number">0</span>).getIntrinsicWidth();</div><div class="line">        mPicHeight = mLikeDrawables.get(<span class="number">0</span>).getIntrinsicHeight();</div><div class="line"></div><div class="line">        <span class="comment">// 初始化布局参数</span></div><div class="line">        mLayoutParams = <span class="keyword">new</span> LayoutParams(mPicWidth, mPicHeight);</div><div class="line">        mLayoutParams.addRule(CENTER_HORIZONTAL);</div><div class="line">        mLayoutParams.addRule(ALIGN_PARENT_BOTTOM);</div><div class="line"></div><div class="line">        <span class="comment">//随机数</span></div><div class="line">        mRandom = <span class="keyword">new</span> Random();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> Drawable <span class="title">generateDrawable</span><span class="params">(<span class="keyword">int</span> resID)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> ContextCompat.getDrawable(getContext(), resID);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>重写onMeasure使显示之前进行测量，主要是为了让动画显示在其他View上面</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (mChildViewHeight &lt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, size = getChildCount(); i &lt; size; i++) &#123;</div><div class="line">                View childView = getChildAt(i);</div><div class="line">                measureChild(childView, widthMeasureSpec, heightMeasureSpec);</div><div class="line">                mChildViewHeight += childView.getMeasuredHeight();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 设置底部间距</span></div><div class="line">            mLayoutParams.bottomMargin = mChildViewHeight;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>重写onSizeChange函数，为了能够及时获取View的高度</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</div><div class="line"></div><div class="line">        mViewWidth = getWidth();</div><div class="line">        mViewHeight = getHeight();</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>动态添加ImageView(设置为TextView的点击事件)并设置动画<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addLikeView</span><span class="params">()</span> </span>&#123;</div><div class="line">        ImageView likeView = <span class="keyword">new</span> ImageView(getContext());</div><div class="line">        likeView.setImageDrawable(mLikeDrawables.get(mRandom.nextInt(mLikeDrawables.size())));</div><div class="line">        likeView.setLayoutParams(mLayoutParams);</div><div class="line">        addView(likeView);</div><div class="line">        startAnimation(likeView);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>动画分为两部分：</strong></p>
+<p><strong>第一部分出场:</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> AnimatorSet <span class="title">generateEnterAnimation</span><span class="params">(View target)</span> </span>&#123;</div><div class="line">        ObjectAnimator alpha = ObjectAnimator.ofFloat(target, <span class="string">"alpha"</span>, <span class="number">0.2f</span>, <span class="number">1f</span>);</div><div class="line">        ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, <span class="string">"scaleX"</span>, <span class="number">0.5f</span>, <span class="number">1f</span>);</div><div class="line">        ObjectAnimator scaleY = ObjectAnimator.ofFloat(target, <span class="string">"scaleY"</span>, <span class="number">0.5f</span>, <span class="number">1f</span>);</div><div class="line">        AnimatorSet enterAnimation = <span class="keyword">new</span> AnimatorSet();</div><div class="line">        enterAnimation.playTogether(alpha, scaleX, scaleY);</div><div class="line">        enterAnimation.setDuration(<span class="number">150</span>);</div><div class="line">        enterAnimation.setTarget(target);</div><div class="line">        <span class="keyword">return</span> enterAnimation;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>第二部分：贝塞尔曲线运动动画–属性动画的ValueObjec</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">     * 生成曲线运动动画</div><div class="line">     *</div><div class="line">     * <span class="doctag">@return</span> 动画集合</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> ValueAnimator <span class="title">generateCurveAnimation</span><span class="params">(View target)</span> </span>&#123;</div><div class="line">        CurveEvaluator evaluator = <span class="keyword">new</span> CurveEvaluator(generateCTRLPointF(<span class="number">1</span>), generateCTRLPointF(<span class="number">2</span>));</div><div class="line">        ValueAnimator valueAnimator = ValueAnimator.ofObject(evaluator,</div><div class="line">                <span class="keyword">new</span> PointF((mViewWidth - mPicWidth) / <span class="number">2</span>, mViewHeight - mChildViewHeight - mPicHeight),</div><div class="line">                <span class="keyword">new</span> PointF((mViewWidth) / <span class="number">2</span> + (mRandom.nextBoolean() ? <span class="number">1</span> : -<span class="number">1</span>) * mRandom.nextInt(<span class="number">100</span>), <span class="number">0</span>));</div><div class="line">        valueAnimator.setDuration(<span class="number">3000</span>);</div><div class="line">        valueAnimator.addUpdateListener(<span class="keyword">new</span> CurveUpdateLister(target));</div><div class="line">        valueAnimator.setTarget(target);</div><div class="line"></div><div class="line">        <span class="keyword">return</span> valueAnimator;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 生成贝塞儿曲线的控制点</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> value 设置控制点 y 轴上取值区域</div><div class="line">     * <span class="doctag">@return</span> 控制点的 x y 坐标</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> PointF <span class="title">generateCTRLPointF</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</div><div class="line">        PointF pointF = <span class="keyword">new</span> PointF();</div><div class="line">        pointF.x = mViewWidth / <span class="number">2</span> - mRandom.nextInt(<span class="number">100</span>);</div><div class="line">        pointF.y = mRandom.nextInt(mViewHeight / value);</div><div class="line"></div><div class="line">        <span class="keyword">return</span> pointF;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 自定义估值算法, 计算对象当前运动的具体位置 Point</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">CurveEvaluator</span> <span class="keyword">implements</span> <span class="title">TypeEvaluator</span>&lt;<span class="title">PointF</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">        <span class="comment">// 由于这里使用的是三阶的贝塞儿曲线, 所以我们要定义两个控制点</span></div><div class="line">        <span class="keyword">private</span> PointF ctrlPointF1;</div><div class="line">        <span class="keyword">private</span> PointF ctrlPointF2;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">CurveEvaluator</span><span class="params">(PointF ctrlPointF1, PointF ctrlPointF2)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.ctrlPointF1 = ctrlPointF1;</div><div class="line">            <span class="keyword">this</span>.ctrlPointF2 = ctrlPointF2;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> PointF <span class="title">evaluate</span><span class="params">(<span class="keyword">float</span> fraction, PointF startValue, PointF endValue)</span> </span>&#123;</div><div class="line"></div><div class="line">            <span class="comment">// 这里运用了三阶贝塞儿曲线的公式, 请自行上网查阅</span></div><div class="line">            <span class="keyword">float</span> leftTime = <span class="number">1.0f</span> - fraction;</div><div class="line">            PointF resultPointF = <span class="keyword">new</span> PointF();</div><div class="line"></div><div class="line">            <span class="comment">// 三阶贝塞儿曲线</span></div><div class="line">            resultPointF.x = (<span class="keyword">float</span>) Math.pow(leftTime, <span class="number">3</span>) * startValue.x</div><div class="line">                    + <span class="number">3</span> * (<span class="keyword">float</span>) Math.pow(leftTime, <span class="number">2</span>) * fraction * ctrlPointF1.x</div><div class="line">                    + <span class="number">3</span> * leftTime * (<span class="keyword">float</span>) Math.pow(fraction, <span class="number">2</span>) * ctrlPointF2.x</div><div class="line">                    + (<span class="keyword">float</span>) Math.pow(fraction, <span class="number">3</span>) * endValue.x;</div><div class="line">            resultPointF.y = (<span class="keyword">float</span>) Math.pow(leftTime, <span class="number">3</span>) * startValue.y</div><div class="line">                    + <span class="number">3</span> * (<span class="keyword">float</span>) Math.pow(leftTime, <span class="number">2</span>) * fraction * ctrlPointF1.y</div><div class="line">                    + <span class="number">3</span> * leftTime * fraction * fraction * ctrlPointF2.y</div><div class="line">                    + (<span class="keyword">float</span>) Math.pow(fraction, <span class="number">3</span>) * endValue.y;</div><div class="line">            <span class="keyword">return</span> resultPointF;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 动画曲线路径更新监听器, 用于动态更新动画作用对象的位置</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">CurveUpdateLister</span> <span class="keyword">implements</span> <span class="title">ValueAnimator</span>.<span class="title">AnimatorUpdateListener</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> View target;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">CurveUpdateLister</span><span class="params">(View target)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.target = target;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</div><div class="line">            <span class="comment">// 获取当前动画运行的状态值, 使得动画作用对象沿着曲线(涉及贝塞儿曲线)运动</span></div><div class="line">            PointF pointF = (PointF) animation.getAnimatedValue();</div><div class="line">            ViewCompat.setX(target, pointF.x);</div><div class="line">            ViewCompat.setY(target, pointF.y);</div><div class="line">            <span class="comment">// 改变对象的透明度</span></div><div class="line">            ViewCompat.setAlpha(target, <span class="number">1</span> - animation.getAnimatedFraction());</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>重写回收监听类:</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">     * 动画结束监听器,用于释放无用的资源</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">AnimationEndListener</span> <span class="keyword">extends</span> <span class="title">AnimatorListenerAdapter</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> View target;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AnimationEndListener</span><span class="params">(View target)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.target = target;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animator animation)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>.onAnimationEnd(animation);</div><div class="line"></div><div class="line">            removeView(target);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>最后要组合两个动画，为一个，返回给ingview调用:</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startAnimation</span><span class="params">(View target)</span> </span>&#123;</div><div class="line">        <span class="comment">// 设置进入动画</span></div><div class="line">        AnimatorSet enterAnimator = generateEnterAnimation(target);</div><div class="line">        <span class="comment">// 设置路径动画</span></div><div class="line">        ValueAnimator curveAnimator = generateCurveAnimation(target);</div><div class="line"></div><div class="line">        <span class="comment">// 设置动画集合, 先执行进入动画,最后再执行运动曲线动画</span></div><div class="line">        AnimatorSet finalAnimatorSet = <span class="keyword">new</span> AnimatorSet();</div><div class="line">        finalAnimatorSet.setTarget(target);</div><div class="line">        finalAnimatorSet.playSequentially(enterAnimator, curveAnimator);</div><div class="line">        finalAnimatorSet.addListener(<span class="keyword">new</span> AnimationEndListener(target));</div><div class="line">        finalAnimatorSet.start();</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h2 id="步骤图解"><a href="#步骤图解" class="headerlink" title="步骤图解"></a>步骤图解</h2><p><img src="http://7xread.com1.z0.glb.clouddn.com/acbc842d-87ca-4933-a4ec-c2b19235fee6" alt="Android动画"></p>
+<p>关键就在两个动画的设置:<br>这里分别用到了属性动画里的两个类:</p>
+<p>ObjectAnimator和ValueAnimator</p>
+<h3 id="ObjectAnimator动画"><a href="#ObjectAnimator动画" class="headerlink" title="ObjectAnimator动画"></a>ObjectAnimator动画</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> AnimatorSet <span class="title">generateEnterAnimation</span><span class="params">(View target)</span> </span>&#123;</div><div class="line">        ObjectAnimator alpha = ObjectAnimator.ofFloat(target, <span class="string">"alpha"</span>, <span class="number">0.2f</span>, <span class="number">1f</span>);</div><div class="line">        ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, <span class="string">"scaleX"</span>, <span class="number">0.5f</span>, <span class="number">1f</span>);</div><div class="line">        ObjectAnimator scaleY = ObjectAnimator.ofFloat(target, <span class="string">"scaleY"</span>, <span class="number">0.5f</span>, <span class="number">1f</span>);</div><div class="line">        AnimatorSet enterAnimation = <span class="keyword">new</span> AnimatorSet();</div><div class="line">        enterAnimation.playTogether(alpha, scaleX, scaleY);</div><div class="line">        enterAnimation.setDuration(<span class="number">150</span>);</div><div class="line">        enterAnimation.setTarget(target);</div><div class="line">        <span class="keyword">return</span> enterAnimation;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>传入View</li>
+<li>ObjectAnimator.ofFloat(target, “alpha”, 0.2f, 1f);方法实例化一个ObjectAnimator。这几个参数分别为（View，View的某个属性,变化初始值，变化结束值)</li>
+<li>使用AnimatorSet组合多个ObjectAnimator</li>
+<li>设置其他属性<br>这里也可以不设置真正的属性，在监听事件里修改属性<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rotateyAnimRun</span><span class="params">(<span class="keyword">final</span> View view)</span>  </span></div><div class="line">&#123;  </div><div class="line">    ObjectAnimator anim = ObjectAnimator<span class="comment">//  </span></div><div class="line">            .ofFloat(view, <span class="string">"zhy"</span>, <span class="number">1.0F</span>,  <span class="number">0.0F</span>)<span class="comment">//  </span></div><div class="line">            .setDuration(<span class="number">500</span>);<span class="comment">//  </span></div><div class="line">    anim.start();  </div><div class="line">    anim.addUpdateListener(<span class="keyword">new</span> AnimatorUpdateListener()  </div><div class="line">    &#123;  </div><div class="line">        <span class="meta">@Override</span>  </div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span>  </span></div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">float</span> cVal = (Float) animation.getAnimatedValue();  </div><div class="line">            view.setAlpha(cVal);  </div><div class="line">            view.setScaleX(cVal);  </div><div class="line">            view.setScaleY(cVal);  </div><div class="line">        &#125;  </div><div class="line">    &#125;);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="ValueAnimator动画"><a href="#ValueAnimator动画" class="headerlink" title="ValueAnimator动画"></a>ValueAnimator动画</h3><p>看一个简化的版本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">paowuxian</span><span class="params">(View view)</span>  </span></div><div class="line">    &#123;  </div><div class="line">  </div><div class="line">        ValueAnimator valueAnimator = <span class="keyword">new</span> ValueAnimator();  </div><div class="line">        valueAnimator.setDuration(<span class="number">3000</span>);  </div><div class="line">        valueAnimator.setObjectValues(<span class="keyword">new</span> PointF(<span class="number">0</span>, <span class="number">0</span>));  </div><div class="line">        valueAnimator.setInterpolator(<span class="keyword">new</span> LinearInterpolator());  </div><div class="line">        valueAnimator.setEvaluator(<span class="keyword">new</span> TypeEvaluator&lt;PointF&gt;()  </div><div class="line">        &#123;  </div><div class="line">            <span class="comment">// fraction = t / duration  </span></div><div class="line">            <span class="meta">@Override</span>  </div><div class="line">            <span class="function"><span class="keyword">public</span> PointF <span class="title">evaluate</span><span class="params">(<span class="keyword">float</span> fraction, PointF startValue,  </span></span></div><div class="line">                    PointF endValue)  </div><div class="line">            &#123;  </div><div class="line">                Log.e(TAG, fraction * <span class="number">3</span> + <span class="string">""</span>);  </div><div class="line">                <span class="comment">// x方向200px/s ，则y方向0.5 * 10 * t  </span></div><div class="line">                PointF point = <span class="keyword">new</span> PointF();  </div><div class="line">                point.x = <span class="number">200</span> * fraction * <span class="number">3</span>;  </div><div class="line">                point.y = <span class="number">0.5f</span> * <span class="number">200</span> * (fraction * <span class="number">3</span>) * (fraction * <span class="number">3</span>);  </div><div class="line">                <span class="keyword">return</span> point;  </div><div class="line">            &#125;  </div><div class="line">        &#125;);  </div><div class="line">  </div><div class="line">        valueAnimator.start();  </div><div class="line">        valueAnimator.addUpdateListener(<span class="keyword">new</span> AnimatorUpdateListener()  </div><div class="line">        &#123;  </div><div class="line">            <span class="meta">@Override</span>  </div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span>  </span></div><div class="line">            &#123;  </div><div class="line">                PointF point = (PointF) animation.getAnimatedValue();  </div><div class="line">                mBlueBall.setX(point.x);  </div><div class="line">                mBlueBall.setY(point.y);  </div><div class="line">  </div><div class="line">            &#125;  </div><div class="line">        &#125;);  </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>也是只在UpdateListener事件里更新对象的属性。</p>
+<h1 id="模仿"><a href="#模仿" class="headerlink" title="模仿"></a>模仿</h1><p>雪花飘落</p>
+<h2 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码:"></a>核心代码:</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> ValueAnimator <span class="title">generateCurveAnimation</span><span class="params">(<span class="keyword">final</span> View target)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> ValueAnimator valueAnimator = <span class="keyword">new</span> ValueAnimator();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">float</span> wRadom = mRandom.nextFloat();</div><div class="line">        valueAnimator.setDuration(<span class="number">3000</span>);</div><div class="line">        valueAnimator.setObjectValues(<span class="keyword">new</span> PointF(<span class="number">0</span>, <span class="number">0</span>));</div><div class="line">        valueAnimator.setInterpolator(<span class="keyword">new</span> DecelerateInterpolator());</div><div class="line">        valueAnimator.setEvaluator(<span class="keyword">new</span> TypeEvaluator&lt;PointF&gt;() &#123;</div><div class="line"></div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> PointF <span class="title">evaluate</span><span class="params">(<span class="keyword">float</span> fraction, PointF startValue,</span></span></div><div class="line">                                   PointF endValue) &#123;</div><div class="line"></div><div class="line">                PointF point = <span class="keyword">new</span> PointF();</div><div class="line">                <span class="keyword">float</span> WH = mViewWidth - mPicWidth;</div><div class="line"></div><div class="line">                point.y = fraction * (mViewHeight - mPicHeight);</div><div class="line">                point.x = (<span class="keyword">float</span>) Math.cos(fraction * <span class="number">2</span> * Math.PI) * WH / <span class="number">4</span> + WH*wRadom;</div><div class="line">                <span class="keyword">return</span> point;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        valueAnimator.setTarget(target);</div><div class="line">        valueAnimator.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</div><div class="line">                PointF point = (PointF) animation.getAnimatedValue();</div><div class="line">                target.setX(point.x);</div><div class="line">                target.setY(point.y);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">return</span> valueAnimator;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h2 id="效果图-1"><a href="#效果图-1" class="headerlink" title="效果图"></a>效果图</h2><p><img src="http://7xread.com1.z0.glb.clouddn.com/858d7ebc-d299-4888-9a56-a0245919a1f3" alt="图片描述"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>仔细观察，数学要好。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2016-11-02, 10:36:01</p>
+        <p><span>最后更新:</span>2017-02-19, 13:58:51</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/02/Android动画学习分析与实践/" title="Android动画学习分析与实践(1)">https://huruwo.github.io/2016/11/02/Android动画学习分析与实践/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2016/11/02/Android动画学习分析与实践/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/21/自定义AlertDialog/">
+                    自定义AlertDialog--嵌入Listview选择多项
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">
+                    使用GitHub+Hexo快速搭建个人技术博客
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实例分析1—直播点赞动画"><span class="toc-number">2.</span> <span class="toc-text">实例分析1—直播点赞动画</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#效果图"><span class="toc-number">2.1.</span> <span class="toc-text">效果图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码分析"><span class="toc-number">2.2.</span> <span class="toc-text">代码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤图解"><span class="toc-number">2.3.</span> <span class="toc-text">步骤图解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectAnimator动画"><span class="toc-number">2.3.1.</span> <span class="toc-text">ObjectAnimator动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueAnimator动画"><span class="toc-number">2.3.2.</span> <span class="toc-text">ValueAnimator动画</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模仿"><span class="toc-number">3.</span> <span class="toc-text">模仿</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#核心代码"><span class="toc-number">3.1.</span> <span class="toc-text">核心代码:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#效果图-1"><span class="toc-number">3.2.</span> <span class="toc-text">效果图</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Android动画学习分析与实践(1)　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/02/Android动画学习分析与实践/" data-title="Android动画学习分析与实践(1)" data-url="https://huruwo.github.io/2016/11/02/Android动画学习分析与实践/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/21/自定义AlertDialog/" title="上一篇: 自定义AlertDialog--嵌入Listview选择多项">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/" title="下一篇: 使用GitHub+Hexo快速搭建个人技术博客">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 精分道长
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
