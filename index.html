@@ -516,24 +516,9 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="如很使用SVN管理代码"><a href="#如很使用SVN管理代码" class="headerlink" title="如很使用SVN管理代码"></a>如很使用SVN管理代码</h2><p>详见<a href="https://www.zhihu.com/question/32298079" target="_blank" rel="external">android studio SVN</a></p>
-<p>两种svn 上传方式，一种是import 一种是 Share</p>
-<p>使用Share更正规，能直接与仓库建立联系。</p>
-<p>而 import 之后 只有再次checkout 出来才能建立联系。</p>
-<h2 id="Android-Studio的配置"><a href="#Android-Studio的配置" class="headerlink" title="Android Studio的配置"></a>Android Studio的配置</h2><p><a href="http://liukun.engineer/2016/04/10/Android-Studio-advanced-configuration/" target="_blank" rel="external">基本配置</a></p>
-<h2 id="Android-Studio-Gradle-异常处理"><a href="#Android-Studio-Gradle-异常处理" class="headerlink" title="Android Studio Gradle 异常处理"></a>Android Studio Gradle 异常处理</h2><h3 id="使用百度定位SDK发生以下异常"><a href="#使用百度定位SDK发生以下异常" class="headerlink" title="使用百度定位SDK发生以下异常"></a>使用百度定位SDK发生以下异常</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Error:Execution failed for task &apos;:</div><div class="line">app:transformClassesWithDexForDebug&apos;. </div><div class="line">&gt; com.android.build.api.transform.TransformException:</div><div class="line"> com.android.ide.common.process.ProcessException:</div><div class="line"> java.util.concurrent.ExecutionException:</div><div class="line"> com.android.dex.DexIndexOverflowExcepti</div><div class="line"> </div><div class="line">`</div></pre></td></tr></table></figure>
-<p>解决办法:<br>在build.radle的android 下添加 multiDexEnabled true</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line">    compileSdkVersion 25</div><div class="line">    buildToolsVersion &quot;25.0.2&quot;</div><div class="line">    defaultConfig &#123;</div><div class="line">        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;</div><div class="line">        multiDexEnabled true</div><div class="line">    &#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<h2 id="Android-5-0以下出现-java-lang-NoClassDefFoundError"><a href="#Android-5-0以下出现-java-lang-NoClassDefFoundError" class="headerlink" title="Android 5.0以下出现 java.lang.NoClassDefFoundError:"></a>Android 5.0以下出现 java.lang.NoClassDefFoundError:</h2><p>原因:项目由老eclipse转到as，启动发现异常且只出现再5.0以下的机型。</p>
-<p>解决：<a href="http://www.jianshu.com/p/8b4f711da0bb" target="_blank" rel="external">Android 5.0以下出现 java.lang.NoClassDefFoundError: </a><br>解决方法：</p>
-<blockquote>
-<p>一、配置build.gradle (app)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">android &#123;</div><div class="line"></div><div class="line">        compileSdkVersion 22</div><div class="line"></div><div class="line">         buildToolsVersion &quot;23.3.0&quot;</div><div class="line"></div><div class="line">defaultConfig &#123;</div><div class="line"></div><div class="line">          minSdkVersion 15</div><div class="line"></div><div class="line">          targetSdkVersion 22</div><div class="line"></div><div class="line">          // Enabling multidex support. 开关</div><div class="line"></div><div class="line">              multiDexEnabledtrue</div><div class="line"></div><div class="line">&#125;</div><div class="line">dependencies &#123;</div><div class="line"></div><div class="line">       // 添加依赖</div><div class="line"></div><div class="line">          compile &apos;com.android.support:multidex:1.0.0&apos;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>二、使用自定义的Application继承MultiDexApplication这个类，或者重写Application的方法attachBaseContext()，并调用MultiDex.install()；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line"></div><div class="line">protected voidattachBaseContext(Context base) &#123;</div><div class="line"></div><div class="line">super.attachBaseContext(base);</div><div class="line"></div><div class="line">MultiDex.install(base);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>三、配置文件里添加application的引用</p>
-<p>四、到项目的根目录下执行  ./gradlew clean build</p>
-<p>总结:这个错误是Android应用的方法总数限制造成的。Android平台的Java虚拟机Dalvik在执行DEX格式的Java应用程序时，使用原生类型short来索引DEX文件中的方法。这意味着单个DEX文件可被引用的方法总数被限制为65536。通常APK包含一个classes.dex文件，因此Android应用的方法总数不能超过这个数量，这包括Android框架、类库和你自己开发的代码。而Android 5.0和更高版本使用名为ART的运行时，它原生支持从APK文件加载多个DEX文件。在应用安装时，它会执行预编译，扫描classes(..N).dex文件然后将其编译成单个.oat文件用于执行. 通熟的讲，就是分包。</p>
-<h2 id="Android-Studio-个人使用插件"><a href="#Android-Studio-个人使用插件" class="headerlink" title="Android Studio 个人使用插件"></a>Android Studio 个人使用插件</h2>
+              <h2 id="如很使用SVN管理代码"><a href="#如很使用SVN管理代码" class="headerlink" title="如很使用SVN管理代码"></a>如很使用SVN管理代码</h2><p>详见<a href="https://www.zhihu.com/question/32298079">android studio SVN</a></p>
+<p>两种svn 上传方式，一种是import 一种是 Share<br>
+          
       
     </div>
     
@@ -542,6 +527,10 @@
       
 
       
+      
+        <p class="article-more-link">
+          <a href="/2017/03/07/Android-Studio相关笔记/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
