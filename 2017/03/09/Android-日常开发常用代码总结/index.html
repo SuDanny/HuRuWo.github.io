@@ -15,16 +15,16 @@
 
 
 
-<meta name="description" content="文件变为二进制字节流再变成String字符串打开文件管理器获取文件···Intent intent = new Intent(Intent.ACTION_GET_CONTENT);                        intent.setType(“/“);//设置类型，我这里是任意类型，任意后缀的可以这样写。                        intent.addCateg">
+<meta name="description" content="文件变为二进制字节流再变成String字符串打开文件管理器获取文件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android 日常开发常用代码总结">
 <meta property="og:url" content="https://huruwo.github.io/2017/03/09/Android-日常开发常用代码总结/index.html">
 <meta property="og:site_name" content="五谷观精分道长博客">
-<meta property="og:description" content="文件变为二进制字节流再变成String字符串打开文件管理器获取文件···Intent intent = new Intent(Intent.ACTION_GET_CONTENT);                        intent.setType(“/“);//设置类型，我这里是任意类型，任意后缀的可以这样写。                        intent.addCateg">
-<meta property="og:updated_time" content="2017-03-21T15:33:26.596Z">
+<meta property="og:description" content="文件变为二进制字节流再变成String字符串打开文件管理器获取文件">
+<meta property="og:updated_time" content="2017-03-21T15:54:14.713Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 日常开发常用代码总结">
-<meta name="twitter:description" content="文件变为二进制字节流再变成String字符串打开文件管理器获取文件···Intent intent = new Intent(Intent.ACTION_GET_CONTENT);                        intent.setType(“/“);//设置类型，我这里是任意类型，任意后缀的可以这样写。                        intent.addCateg">
+<meta name="twitter:description" content="文件变为二进制字节流再变成String字符串打开文件管理器获取文件">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -317,7 +317,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="文件变为二进制字节流再变成String字符串"><a href="#文件变为二进制字节流再变成String字符串" class="headerlink" title="文件变为二进制字节流再变成String字符串"></a>文件变为二进制字节流再变成String字符串</h2><h3 id="打开文件管理器获取文件"><a href="#打开文件管理器获取文件" class="headerlink" title="打开文件管理器获取文件"></a>打开文件管理器获取文件</h3><p>···<br>Intent intent = new Intent(Intent.ACTION_GET_CONTENT);<br>                        intent.setType(“<em>/</em>“);//设置类型，我这里是任意类型，任意后缀的可以这样写。<br>                        intent.addCategory(Intent.CATEGORY_OPENABLE);<br>                        startActivityForResult(intent, 1);<br>···<br><a id="more"></a></p>
+        <h2 id="文件变为二进制字节流再变成String字符串"><a href="#文件变为二进制字节流再变成String字符串" class="headerlink" title="文件变为二进制字节流再变成String字符串"></a>文件变为二进制字节流再变成String字符串</h2><h3 id="打开文件管理器获取文件"><a href="#打开文件管理器获取文件" class="headerlink" title="打开文件管理器获取文件"></a>打开文件管理器获取文件</h3><a id="more"></a>
+<p>···<br>Intent intent = new Intent(Intent.ACTION_GET_CONTENT);<br>                        intent.setType(“<em>/</em>“);//设置类型，我这里是任意类型，任意后缀的可以这样写。<br>                        intent.addCategory(Intent.CATEGORY_OPENABLE);<br>                        startActivityForResult(intent, 1);<br>···</p>
 <h3 id="得到返回结果并转化为二进制文件"><a href="#得到返回结果并转化为二进制文件" class="headerlink" title="得到返回结果并转化为二进制文件"></a>得到返回结果并转化为二进制文件</h3><p>···<br>@Override<br>    protected void onActivityResult(int requestCode, int resultCode, Intent data) {<br>        // TODO Auto-generated method stub<br>        super.onActivityResult(requestCode, resultCode, data);<br>        if (requestCode == 1) {<br>            try {<br>                Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。<br>                String[] proj = {MediaStore.Images.Media.DATA};<br>                Cursor cursor = getContentResolver().query(uri, proj, null, null, null);</p>
 <pre><code>int actual_image_column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 cursor.moveToFirst();
@@ -344,7 +345,7 @@ scnr.setText(file.getName());
         <p><span>本文标题:</span><a href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
         <p><span>发布时间:</span>2017-03-09, 15:40:28</p>
-        <p><span>最后更新:</span>2017-03-21, 23:33:26</p>
+        <p><span>最后更新:</span>2017-03-21, 23:54:14</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/03/09/Android-日常开发常用代码总结/" title="Android 日常开发常用代码总结">https://huruwo.github.io/2017/03/09/Android-日常开发常用代码总结/</a>
             <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2017/03/09/Android-日常开发常用代码总结/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
