@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="精分道长" />
+
+
+
+<meta name="description" content="前言:前面介绍了瀑布流的基本实现，实际上瀑布流还有一些事件需要监听。比如点击事件，下拉和上拉事件。这里接着上次的 android—UI—RecyclerView实现瀑布流(1)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android--RecyclerView使用详解">
+<meta property="og:url" content="https://huruwo.github.io/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/index.html">
+<meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="前言:前面介绍了瀑布流的基本实现，实际上瀑布流还有一些事件需要监听。比如点击事件，下拉和上拉事件。这里接着上次的 android—UI—RecyclerView实现瀑布流(1)">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921101724914">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921102224654">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921104553211">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921152236079">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921155149533">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921155209096">
+<meta property="og:updated_time" content="2017-03-21T15:48:56.121Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android--RecyclerView使用详解">
+<meta name="twitter:description" content="前言:前面介绍了瀑布流的基本实现，实际上瀑布流还有一些事件需要监听。比如点击事件，下拉和上拉事件。这里接着上次的 android—UI—RecyclerView实现瀑布流(1)">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160921101724914">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="五谷观精分道长博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Android--RecyclerView使用详解 | 五谷观精分道长博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">精分道长</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">想写诗的程序员</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔/">生活随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于本人</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">android开发者，python爱好者。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">精分道长</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">精分道长</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">想写诗的程序员</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔/">生活随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于本人</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-android---UI---RecyclerView实现瀑布流(2)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/" class="article-date">
+      <time datetime="2016-12-24T11:33:14.000Z" itemprop="datePublished">2016-12-24</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android--RecyclerView使用详解
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言:"></a>前言:</h1><p>前面介绍了瀑布流的基本实现，实际上瀑布流还有一些事件需要监听。比如点击事件，下拉和上拉事件。<br>这里接着上次的<a href="http://blog.csdn.net/lw_zhaoritian/article/details/52538294" target="_blank" rel="external"> android—UI—RecyclerView实现瀑布流(1) </a></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h1 id="添加Item点击事件"><a href="#添加Item点击事件" class="headerlink" title="添加Item点击事件:"></a>添加Item点击事件:</h1><p>参考文章:<a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0327/2647.html" target="_blank" rel="external">为RecyclerView添加item的点击事件</a><br>RecyclerView侧重的是布局的灵活性，虽说可以替代ListView但是连基本的点击事件都没有，这篇文章就来详细讲解如何为RecyclerView的item添加点击事件，顺便复习一下<strong>观察者模式</strong>。</p>
+<h2 id="最终目的"><a href="#最终目的" class="headerlink" title="最终目的"></a>最终目的</h2><p>所以我们的目的就是要模拟ListView的setOnItemClickListener()方法，调用者只须调用类似于setOnItemClickListener的东西就能获得被点击item的相关数据。</p>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理:"></a>实现原理:</h2><p>为RecyclerView的每个子item设置setOnClickListener，然后在onClick中再调用一次对外封装的接口，将这个事件传递给外面的调用者。而“为RecyclerView的每个子item设置setOnClickListener”在Adapter中设置。其实直接在onClick中也能完全处理item的点击事件，但是这样会破坏代码的逻辑。</p>
+<h2 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤:"></a>实现步骤:</h2><p>在这里为了不影响前面的数据，重写一个适配器adapter:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MyAdapter.java</div></pre></td></tr></table></figure>
+<p>具体步骤如下:<br>1.继承接口 OnClickListener<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public class MyAdapter extends RecyclerView.Adapter&lt;MyAdapter.ViewHolder&gt; implements View.OnClickListener&#123; &#125;</div></pre></td></tr></table></figure></p>
+<p>2.在MyAdapter中定义如下接口,模拟ListView的OnItemClickListener：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//定义接口</div><div class="line">public static interface OnRecyclerViewItemClickListener &#123;</div><div class="line">        void onItemClick(View view , String data);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>3.声明一个这个接口的变量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> OnRecyclerViewItemClickListener mOnItemClickListener = <span class="keyword">null</span>;</div></pre></td></tr></table></figure>
+<p>4.和前面的ViewHolder不同，这里使用了自定义的ViewHolder<br>ViewHoider的作用就是一个储存器，所以自定义的ViewHolder继承于<br><code>RecyclerView.ViewHolder</code>—RecyclerView强制使用ViewHolder，而在ListView里面，ViewHolder只是作为一个优化的选项。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//自定义的ViewHolder，持有每个Item的的所有界面元素</div><div class="line">    public static class ViewHolder extends RecyclerView.ViewHolder &#123;</div><div class="line">        public TextView mTextView;</div><div class="line">        public ImageView mImgView;</div><div class="line">        public ViewHolder(View view)&#123;</div><div class="line">            super(view);</div><div class="line">            mTextView = (TextView) view.findViewById(R.id.masonry_item_title);</div><div class="line">            mImgView=(ImageView) view.findViewById(R.id.masonry_item_img);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>5.在onCreateViewHolder()中为每个item添加点击事件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public ViewHolder onCreateViewHolder(ViewGroup viewGroup,  int viewType) &#123;</div><div class="line">        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);</div><div class="line">        ViewHolder vh = new ViewHolder(view);</div><div class="line">        //将创建的View注册点击事件</div><div class="line">        view.setOnClickListener(this);</div><div class="line">        return vh;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>6.将点击事件转移给外面的调用者：（这也是继承接口OnClickListener必须实现的方法）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public void onClick(View v) &#123;</div><div class="line">        if (mOnItemClickListener != null) &#123;</div><div class="line">            //注意这里使用getTag方法获取数据</div><div class="line">            mOnItemClickListener.onItemClick(v,(String)v.getTag());</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>7.前面一步有个getTag方法获取数据，那就有个setTag方法对应。在onBindViewHolder()方法里面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(ViewHolder viewHolder,  <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">        viewHolder.mTextView.setText(products.get(position).getTitle());</div><div class="line">        viewHolder.mImgView.setImageResource(products.get(position).getImg());</div><div class="line">        <span class="comment">//将数据保存在itemView的Tag中，以便点击时进行获取</span></div><div class="line">        viewHolder.itemView.setTag(products.get(position).getTitle());</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>8.最后暴露给外面的调用者，定义一个设置Listener的方法（）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnItemClickListener</span><span class="params">(OnRecyclerViewItemClickListener listener)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.mOnItemClickListener = listener;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>总的MyAdapter代码:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">Adapter</span>&lt;<span class="title">MyAdapter</span>.<span class="title">ViewHolder</span>&gt; <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> List&lt;Product&gt; products;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyAdapter</span><span class="params">(List&lt;Product&gt; list)</span> </span>&#123;</div><div class="line">        products = list;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> OnRecyclerViewItemClickListener mOnItemClickListener = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">    <span class="comment">//define interface</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnRecyclerViewItemClickListener</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(View view , String data)</span></span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> ViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup viewGroup, <span class="keyword">int</span> viewType)</span> </span>&#123;</div><div class="line">        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.masonry_item, viewGroup, <span class="keyword">false</span>);</div><div class="line">        ViewHolder vh = <span class="keyword">new</span> ViewHolder(view);</div><div class="line">        <span class="comment">//将创建的View注册点击事件</span></div><div class="line">        view.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">return</span> vh;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(ViewHolder viewHolder,  <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">        viewHolder.mTextView.setText(products.get(position).getTitle());</div><div class="line">        viewHolder.mImgView.setImageResource(products.get(position).getImg());</div><div class="line">        <span class="comment">//将数据保存在itemView的Tag中，以便点击时进行获取</span></div><div class="line">        viewHolder.itemView.setTag(products.get(position).getTitle());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mOnItemClickListener != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">//注意这里使用getTag方法获取数据</span></div><div class="line">            mOnItemClickListener.onItemClick(v,(String)v.getTag());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setOnItemClickListener</span><span class="params">(OnRecyclerViewItemClickListener listener)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.mOnItemClickListener = listener;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">//获取数据的数量</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> products.size();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//自定义的ViewHolder，持有每个Item的的所有界面元素</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</div><div class="line">        <span class="keyword">public</span> TextView mTextView;</div><div class="line">        <span class="keyword">public</span> ImageView mImgView;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ViewHolder</span><span class="params">(View view)</span></span>&#123;</div><div class="line">            <span class="keyword">super</span>(view);</div><div class="line">            mTextView = (TextView) view.findViewById(R.id.masonry_item_title);</div><div class="line">            mImgView=(ImageView) view.findViewById(R.id.masonry_item_img);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后在Activity中调用即可<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">adapter.setOnItemClickListener(<span class="keyword">new</span> MyAdapter.OnRecyclerViewItemClickListener()&#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onItemClick</span><span class="params">(View view , String data)</span></span>&#123;</div><div class="line">                Toast.makeText(MainActivity.<span class="keyword">this</span>, data, Toast.LENGTH_SHORT).show();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure></p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试:"></a>测试:</h2><p><img src="http://img.blog.csdn.net/20160921101724914" alt="这里写图片描述"></p>
+<p>当然还可以添加点击样式:drawable添加颜色选择器:<br>item_bg.xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;</div><div class="line">    &lt;item android:drawable=&quot;@color/colorAccent&quot; android:state_pressed=&quot;true&quot;&gt;&lt;/item&gt;</div><div class="line">    &lt;item android:drawable=&quot;@color/white&quot;&gt;&lt;/item&gt;</div><div class="line">&lt;/selector&gt;</div></pre></td></tr></table></figure></p>
+<p>设置item的背景色为item_bg即可<br><img src="http://img.blog.csdn.net/20160921102224654" alt="这里写图片描述"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h2><blockquote>
+<p>以上所有步骤都发生在自定义的adapter中，典型的观察者模式，有点绕的地方在于，这里涉及到两个观察者模式的使用，view的setOnClickListener本来就是观察者模式，我们将这个观察者模式的事件监听传递给了我们自己的观察者模式。</p>
+</blockquote>
+<h1 id="上拉和下拉事件的监听"><a href="#上拉和下拉事件的监听" class="headerlink" title="上拉和下拉事件的监听:"></a>上拉和下拉事件的监听:</h1><p>在下拉刷新，上拉加载的事件中，第一步就是要监听上啦和下拉事件。<br>这个很简单，由于自带了OnScrollListener方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">recyclerView.addOnScrollListener(<span class="keyword">new</span> RecyclerView.OnScrollListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollStateChanged</span><span class="params">(RecyclerView recyclerView, <span class="keyword">int</span> newState)</span> </span>&#123;</div><div class="line">                <span class="keyword">super</span>.onScrollStateChanged(recyclerView, newState);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrolled</span><span class="params">(RecyclerView recyclerView, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy)</span> </span>&#123;</div><div class="line">                <span class="keyword">super</span>.onScrolled(recyclerView, dx, dy);</div><div class="line">                Log.d(<span class="string">"ScrollListener"</span>,dx+<span class="string">","</span>+dy+<span class="string">""</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure></p>
+<p>位置变化：<br><img src="http://img.blog.csdn.net/20160921104553211" alt="这里写图片描述"></p>
+<p><strong>可以看出上拉为负下拉为正。</strong></p>
+<h2 id="上拉加载"><a href="#上拉加载" class="headerlink" title="上拉加载:"></a>上拉加载:</h2><p><strong>首先判断是否已经到底部:</strong><br>判断方法1:使用StaggeredGridLayoutManager获取最后一个的位置，判断是否在屏幕底部。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;</div><div class="line">               if (lastPositions == null) &#123;</div><div class="line">                   lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];</div><div class="line">               &#125;</div><div class="line">               staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);</div><div class="line">               lastVisibleItemPosition = findMax(lastPositions);</div></pre></td></tr></table></figure></p>
+<p>判断方法2: RecyclerView每加载一个item都会调用一次onBindViewHolder方法，并且只在item由不可见变为可见的时候才会调用此方法。我们可以通过onBindViewHolder方法来判断是否已经到达列表的底部。–&gt;<a href="http://www.cnblogs.com/hsji/p/4955957.html" target="_blank" rel="external">RecyclerView滑动到底部自动加载</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public void onBindViewHolder(CollectionViewHolder holder, int position) &#123;</div><div class="line">        holder.fillData(mData.get(position));</div><div class="line">        if(position == getItemCount()-1)&#123;//已经到达列表的底部</div><div class="line">            loadMoreData();</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这里采用第一种方法:<br>具体如下:<br>设置两个变量:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">//最后一个的位置</span></div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] lastPositions;</div><div class="line"></div><div class="line"></div><div class="line"> <span class="comment">//最后一个可见的item的位置</span></div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> lastVisibleItemPosition;</div></pre></td></tr></table></figure></p>
+<p>滑动事件监听:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">recyclerView.addOnScrollListener(<span class="keyword">new</span> RecyclerView.OnScrollListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollStateChanged</span><span class="params">(RecyclerView recyclerView, <span class="keyword">int</span> newState)</span> </span>&#123;</div><div class="line">                <span class="keyword">super</span>.onScrollStateChanged(recyclerView, newState);</div><div class="line">                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();</div><div class="line">                <span class="keyword">int</span> visibleItemCount = layoutManager.getChildCount();</div><div class="line">                <span class="keyword">int</span> totalItemCount = layoutManager.getItemCount();</div><div class="line">                Log.i(<span class="string">"onScrollStateChanged"</span>, <span class="string">"visibleItemCount"</span> + visibleItemCount);</div><div class="line">                Log.i(<span class="string">"onScrollStateChanged"</span>, <span class="string">"lastVisibleItemPosition"</span> + lastVisibleItemPosition);</div><div class="line">                Log.i(<span class="string">"onScrollStateChanged"</span>, <span class="string">"totalItemCount"</span> + totalItemCount);</div><div class="line">                Log.i(<span class="string">"newstate"</span>,<span class="string">"newstate"</span>+newState);</div><div class="line">                <span class="keyword">if</span> (visibleItemCount &gt; <span class="number">0</span> &amp;&amp; newState == RecyclerView.SCROLL_STATE_IDLE &amp;&amp; lastVisibleItemPosition == totalItemCount - <span class="number">2</span>) &#123;</div><div class="line">                    Log.d(<span class="string">"----------"</span>,<span class="string">"到底了"</span>);</div><div class="line"></div><div class="line">                &#125;</div><div class="line"></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrolled</span><span class="params">(RecyclerView recyclerView, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy)</span> </span>&#123;</div><div class="line">                <span class="keyword">super</span>.onScrolled(recyclerView, dx, dy);</div><div class="line">                <span class="comment">//Log.d("ScrollListener",dx+","+dy+"");</span></div><div class="line">                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();</div><div class="line">                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;</div><div class="line">                <span class="keyword">if</span> (lastPositions == <span class="keyword">null</span>) &#123;</div><div class="line">                    lastPositions = <span class="keyword">new</span> <span class="keyword">int</span>[staggeredGridLayoutManager.getSpanCount()];</div><div class="line">                &#125;</div><div class="line">                staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);</div><div class="line">                lastVisibleItemPosition = findMax(lastPositions);</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure></p>
+<p>首先在onScrolled方法里监听滚动事件的最后一个Item的位置。<br>1.获取View的layoutManager。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();</div><div class="line">taggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;</div></pre></td></tr></table></figure>
+<p>2.getSpanCount()返回所包含的 Item 总个数—为什么是个数组?</p>
+<p><font color="blue">经过测试，lastPositions的长度和设置的列有关，设置3列，数组长度也为三。但是测试时候，在<code>findLastVisibleItemPositions</code> 方法之前，值都为0.经过<code>findLastVisibleItemPositions</code> 方法之后就能找到每一列的最大位置。—这里是27,28,29。然后比较，输出最大的位置。</font><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if (lastPositions == null) &#123;</div><div class="line">                    lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];</div><div class="line">                &#125;</div></pre></td></tr></table></figure></p>
+<p>3.通过位置判断哪个才是真正的最后一个<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);</div><div class="line">lastVisibleItemPosition = findMax(lastPositions);</div></pre></td></tr></table></figure></p>
+<p>自定义findMax方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">private int findMax(int[] lastPositions) &#123;</div><div class="line">        int max = lastPositions[0];</div><div class="line">        for (int value : lastPositions) &#123;</div><div class="line">            if (value &gt; max) &#123;</div><div class="line">                max = value;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return max;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>继续onScrollStateChanged()方法<br>1.同样先<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();</div></pre></td></tr></table></figure></p>
+<p>2.通过布局管理器获取:总Item数和可见item数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int visibleItemCount = layoutManager.getChildCount();</div><div class="line">                int totalItemCount = layoutManager.getItemCount();</div></pre></td></tr></table></figure></p>
+<p>3.判断是否到底:<code>lastVisibleItemPosition == totalItemCount - 1</code> 因为是位置是从0开始的，所以比总数小1.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">if (visibleItemCount &gt; 0 &amp;&amp; newState == RecyclerView.SCROLL_STATE_IDLE &amp;&amp; lastVisibleItemPosition == totalItemCount - 1) &#123;</div><div class="line">                    Log.d(&quot;----------&quot;,&quot;到底了&quot;);</div><div class="line"></div><div class="line">                &#125;</div></pre></td></tr></table></figure></p>
+<p>测试–</p>
+<p><img src="http://img.blog.csdn.net/20160921152236079" alt="这里写图片描述"></p>
+<p><strong>数据加载:</strong><br>在适配器MyAdapter中添加两个方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//增加item</div><div class="line">    public void addData(int position,String text,int Bitmap) &#123;</div><div class="line">        products.add(new Product(Bitmap, text));</div><div class="line">        notifyItemInserted(position);</div><div class="line">    &#125;</div><div class="line">   //删除item</div><div class="line">    public void removeData(int position) &#123;</div><div class="line">        products.remove(position);</div><div class="line">        notifyItemInserted(position);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>在拉到底部的时候调用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">if (visibleItemCount &gt; 0 &amp;&amp; newState == RecyclerView.SCROLL_STATE_IDLE &amp;&amp; lastVisibleItemPosition == totalItemCount - 1) &#123;</div><div class="line">                    Log.d(&quot;----------&quot;,&quot;到底了&quot;);</div><div class="line">                    adapter.addData(totalItemCount,&quot;添加&quot;,R.drawable.ic_9);</div><div class="line"></div><div class="line">                &#125;</div></pre></td></tr></table></figure></p>
+<p>测试:<br><img src="http://img.blog.csdn.net/20160921155149533" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20160921155209096" alt="这里写图片描述"></p>
+<h2 id="下拉刷新"><a href="#下拉刷新" class="headerlink" title="下拉刷新:"></a>下拉刷新:</h2><p><del>下拉刷新要判断是否在顶部</del>:使用SwipeRefreshLayout控件不需要判断是否在顶部，因为SwipeRefreshLayout控件默认在顶部才会刷新数据。<br>所以下面的方法可以作废。</p>
+<p>同样的道理:findFirstVisibleItemPositions方法可以返回当前视图每一列可见的第一个item的位置。判断返回最小的是否等于0，等于就是到顶部了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">private int[] firstPositions;</div><div class="line">private int firstVisibleItemPosition;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">if (firstPositions == null) &#123;</div><div class="line">                    firstPositions = new int[staggeredGridLayoutManager.getSpanCount()];</div><div class="line">                &#125;</div><div class="line">staggeredGridLayoutManager.findFirstVisibleItemPositions(firstPositions);</div><div class="line">firstVisibleItemPosition = findMin(firstPositions);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">private int findMin(int[] firstPositions) &#123;</div><div class="line">        int min = firstPositions[0];</div><div class="line">        for (int value : firstPositions) &#123;</div><div class="line">            Log.d(&quot;xxxx&quot;,value+&quot;&quot;);</div><div class="line">            if (value &lt; min) &#123;</div><div class="line">                min = value;</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">if(firstVisibleItemPosition==0)&#123;</div><div class="line">                    Log.d(&quot;----------&quot;,&quot;到顶了&quot;);</div><div class="line"></div><div class="line">                &#125;</div></pre></td></tr></table></figure>
+<p><strong>实现刷新功能:</strong><br>SwipeRefreshLayout 是谷歌公司推出的用于下拉刷新的控件.<br>更改主布局文件为:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line">&lt;android.support.v4.widget.SwipeRefreshLayout</div><div class="line">    xmlns:android="http://schemas.android.com/apk/res/android"</div><div class="line">    xmlns:tools="http://schemas.android.com/tools"</div><div class="line">    android:id="@+id/swipe_refresh_widget"</div><div class="line">    android:layout_width="match_parent"</div><div class="line">    android:layout_height="match_parent" &gt;</div><div class="line">&lt;android.support.v7.widget.RecyclerView</div><div class="line">        android:id="@+id/recycler"</div><div class="line">        android:layout_width="match_parent"</div><div class="line">        android:layout_height="match_parent"&gt;&lt;/android.support.v7.widget.RecyclerView&gt;</div><div class="line">&lt;/android.support.v4.widget.SwipeRefreshLayout&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>关于SwipeRefreshLayout的使用:</strong><br><a href="http://blog.csdn.net/lw_zhaoritian/article/details/52612381" target="_blank" rel="external">SwipeRefreshLayout的使用</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/">Android--RecyclerView使用详解</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2016-12-24, 19:33:14</p>
+        <p><span>最后更新:</span>2017-03-21, 23:48:56</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/" title="Android--RecyclerView使用详解">https://huruwo.github.io/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/24/android--UI--SwipeRefreshLayout的使用/">
+                    Android--SwipeRefreshLayout使用详解
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/">
+                    Android--RecyclerView使用详解
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number">1.1.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#添加Item点击事件"><span class="toc-number">2.</span> <span class="toc-text">添加Item点击事件:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#最终目的"><span class="toc-number">2.1.</span> <span class="toc-text">最终目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现原理"><span class="toc-number">2.2.</span> <span class="toc-text">实现原理:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现步骤"><span class="toc-number">2.3.</span> <span class="toc-text">实现步骤:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">2.4.</span> <span class="toc-text">测试:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.5.</span> <span class="toc-text">总结:</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#上拉和下拉事件的监听"><span class="toc-number">3.</span> <span class="toc-text">上拉和下拉事件的监听:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#上拉加载"><span class="toc-number">3.1.</span> <span class="toc-text">上拉加载:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下拉刷新"><span class="toc-number">3.2.</span> <span class="toc-text">下拉刷新:</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Android--RecyclerView使用详解　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/24/android---UI---RecyclerView实现瀑布流(2)/" data-title="Android--RecyclerView使用详解" data-url="https://huruwo.github.io/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/24/android--UI--SwipeRefreshLayout的使用/" title="上一篇: Android--SwipeRefreshLayout使用详解">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/" title="下一篇: Android--RecyclerView使用详解">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/android--UI--ViewPager的伪循环效果/">Android--ViewPager的伪循环效果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/Android插件GsonFormat发生parse err !!/">Android--GsonFormat错误解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/android--UI--导航条toolbar/">Android--Toolbar使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/android--UI---侧滑drawerLayout/">Android--drawerLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android--UI--SwipeRefreshLayout的使用/">Android--SwipeRefreshLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerViewd的基本使用/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/android--UI--listview使用和优化/">Android--ListView使用和优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/android--UI--CardView的使用/">Android--CardView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/15/网站访问使用HttpClien出现SSl证书问题/">HttpClient出现SSL证书问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/androidstudio---导入jar文件和添加.SO文件/">AndroidStudio导入SO库和Jar文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(2)---地图功能/">百度地图Api---地图显示</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/">百度地图Api---定位功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/android获取网页源码接口JSON数据/">Android--GsonFormat错误解决</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 精分道长
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

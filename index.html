@@ -448,31 +448,28 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="文件变为二进制字节流再变成String字符串"><a href="#文件变为二进制字节流再变成String字符串" class="headerlink" title="文件变为二进制字节流再变成String字符串"></a>文件变为二进制字节流再变成String字符串</h2><h3 id="打开文件管理器获取文件"><a href="#打开文件管理器获取文件" class="headerlink" title="打开文件管理器获取文件"></a>打开文件管理器获取文件</h3><p>···<br>Intent intent = new Intent(Intent.ACTION_GET_CONTENT);<br>                        intent.setType(“<em>/</em>“);//设置类型，我这里是任意类型，任意后缀的可以这样写。<br>                        intent.addCategory(Intent.CATEGORY_OPENABLE);<br>                        startActivityForResult(intent, 1);<br>···</p>
-<h3 id="得到返回结果并转化为二进制文件"><a href="#得到返回结果并转化为二进制文件" class="headerlink" title="得到返回结果并转化为二进制文件"></a>得到返回结果并转化为二进制文件</h3><p>···<br>@Override<br>    protected void onActivityResult(int requestCode, int resultCode, Intent data) {<br>        // TODO Auto-generated method stub<br>        super.onActivityResult(requestCode, resultCode, data);<br>        if (requestCode == 1) {<br>            try {<br>                Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。<br>                String[] proj = {MediaStore.Images.Media.DATA};<br>                Cursor cursor = getContentResolver().query(uri, proj, null, null, null);</p>
-<pre><code>int actual_image_column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-cursor.moveToFirst();
-String img_path = cursor.getString(actual_image_column_index);
-File file = new File(img_path);
-scnr.setText(file.getName());
-</code></pre><p>//———————-普通文件—————————-<br>                FileInputStream in = new FileInputStream(file);<br>                byte[] buffer = new byte[(int) file.length() + 100];<br>                int length = in.read(buffer);<br>                filestring = Base64.encodeToString(buffer, 0, length,<br>                        Base64.DEFAULT);</p>
-<p>//————————图片(包括压缩)—————-<br>//<br>//                BitmapFactory.Options opts = new BitmapFactory.Options();<br>//                opts.inJustDecodeBounds = true;<br>//                BitmapFactory.decodeFile(img_path, opts);<br>//                opts.inJustDecodeBounds = false;<br>//                opts.inSampleSize = 10;<br>//                Bitmap bm = BitmapFactory.decodeFile(img_path, opts);<br>//                while (bm.getRowBytes() * opts.outHeight / 1024 &gt; 80) {<br>//                    bm.recycle();<br>//                    opts.inSampleSize += 5;<br>//                    bm = BitmapFactory.decodeFile(img_path, opts);<br>//                }<br>//                ByteArrayOutputStream os = new ByteArrayOutputStream();<br>//————————–压缩函数———————–<br>//                bm.compress(Bitmap.CompressFormat.JPEG, 100, os);<br>//                bm.recycle();<br>//                filestring = Base64.encodeToString(os.toByteArray(), Base64.DEFAULT);<br>//                os.reset();<br>//                os.close();</p>
-<pre><code>    } catch (IOException e) {
-        // TODO Auto-generated catch block
-        Log.e(&quot;IOException&quot;,e.getMessage());
-    }
-
-}
-</code></pre><p>···</p>
-
+              <h2 id="文件变为二进制字节流再变成String字符串"><a href="#文件变为二进制字节流再变成String字符串" class="headerlink" title="文件变为二进制字节流再变成String字符串"></a>文件变为二进制字节流再变成String字符串</h2><h3 id="打开文件管理器获取文件"><a href="#打开文件管理器获取文件" class="headerlink" title="打开文件管理器获取文件"></a>打开文件管理器获取文件</h3><p>···<br>Intent intent = new Intent(Intent.ACTION_GET_CONTENT);<br>                        intent.setType(“<em>/</em>“);//设置类型，我这里是任意类型，任意后缀的可以这样写。<br>                        intent.addCategory(Intent.CATEGORY_OPENABLE);<br>                        startActivityForResult(intent, 1);<br>···<br>
+          
       
     </div>
     
     <div class="article-info article-info-index">
       
       
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
 
       
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/03/09/Android-日常开发常用代码总结/#more">阅读全文 >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -630,6 +627,148 @@ scnr.setText(file.getName());
 
 
   
+    <article id="post-android--UI--ViewPager的伪循环效果" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/02/22/android--UI--ViewPager的伪循环效果/" class="article-date">
+      <time datetime="2017-02-22T13:24:23.000Z" itemprop="datePublished">2017-02-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/22/android--UI--ViewPager的伪循环效果/">Android--ViewPager的伪循环效果</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>关于ViewPager的使用<a href="http://blog.csdn.net/lw_zhaoritian/article/details/52431639">http://blog.csdn.net/lw_zhaoritian/article/details/52431639</a></p>
+<hr>
+<p>下面实现ViewPager的循环效果，默认的的ViewPager是不带循环的。所以需要自己写。参考网上例子，实现思路如下。</p>
+<ol>
+<li>首尾添加重复的Fragment</li>
+<li>监听pager变化事件，当变化到新加的Fragment时候进行跳转</li>
+<li>跳转后正常变化，既从最后到最前或最前到最后。<br><img src="http://img.blog.csdn.net/20160918153503533" alt="图片来自互联网">
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/02/22/android--UI--ViewPager的伪循环效果/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Android插件GsonFormat发生parse err !!" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/02/22/Android插件GsonFormat发生parse err !!/" class="article-date">
+      <time datetime="2017-02-22T11:26:45.000Z" itemprop="datePublished">2017-02-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/22/Android插件GsonFormat发生parse err !!/">Android--GsonFormat错误解决</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>使用as插件GsonFormat创建类的时候出现错误:<br><img src="http://img.blog.csdn.net/20161023175728760" alt="这里写图片描述"><br>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/02/22/Android插件GsonFormat发生parse err !!/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-AS常用快捷键大全" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -766,11 +905,11 @@ scnr.setText(file.getName());
 
 
   
-    <article id="post-自定义AlertDialog" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-android--UI--导航条toolbar" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/12/21/自定义AlertDialog/" class="article-date">
-      <time datetime="2016-12-21T00:59:55.000Z" itemprop="datePublished">2016-12-21</time>
+      <a href="/2016/12/30/android--UI--导航条toolbar/" class="article-date">
+      <time datetime="2016-12-30T14:16:09.000Z" itemprop="datePublished">2016-12-30</time>
 </a>
 
 
@@ -785,7 +924,7 @@ scnr.setText(file.getName());
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a>
+      <a class="article-title" href="/2016/12/30/android--UI--导航条toolbar/">Android--Toolbar使用详解</a>
     </h1>
   
 
@@ -795,8 +934,9 @@ scnr.setText(file.getName());
     <div class="article-entry" itemprop="articleBody">
       
           
-              <h1 id="由于项目要求，实现一个自定义的AlertDialog并复选"><a href="#由于项目要求，实现一个自定义的AlertDialog并复选" class="headerlink" title="由于项目要求，实现一个自定义的AlertDialog并复选"></a>由于项目要求，实现一个自定义的AlertDialog并复选</h1><p>效果图如下:</p>
-<p><img src="http://7xread.com1.z0.glb.clouddn.com/02cd94bf-d2a8-417d-ad02-b6e6ee52e826" alt="图片描述"></p>
+              <p>#android–UI–导航条toolbar</p>
+<h2 id="标签（空格分隔）：-android-UI-toolbar"><a href="#标签（空格分隔）：-android-UI-toolbar" class="headerlink" title="标签（空格分隔）： android UI toolbar"></a>标签（空格分隔）： android UI toolbar</h2><p>参考<a href="http://www.codeceo.com/article/android-toolbar-develop.html，自己加以理解。">http://www.codeceo.com/article/android-toolbar-develop.html，自己加以理解。</a></p>
+<p><h5>开发工具：</h5><font color="red">AS2.1.2</font><br>
           
       
     </div>
@@ -816,146 +956,7 @@ scnr.setText(file.getName());
 
       
         <p class="article-more-link">
-          <a href="/2016/12/21/自定义AlertDialog/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Android动画学习分析与实践" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/02/Android动画学习分析与实践/" class="article-date">
-      <time datetime="2016-11-02T02:36:01.000Z" itemprop="datePublished">2016-11-02</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Android进阶必须学习的就是动画和自定义View(ViewGroup)了。在学习完基本概念之后，仍然发现自己不能很好的写出动画。<br>我觉的分析和模仿别人的动画是一个很好的思路。</p>
-<p>关于基础可以看教程:<br><a href="http://www.jianshu.com/p/420629118c10">Android 动画总结</a><br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/11/02/Android动画学习分析与实践/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-使用GitHub-Hexo快速搭建个人技术博客" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/" class="article-date">
-      <time datetime="2016-10-30T07:41:32.000Z" itemprop="datePublished">2016-10-30</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p><img src="http://7xread.com1.z0.glb.clouddn.com/5f439992-83f8-4ff5-bb43-9c5b6fa7f563" alt=""></p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前几天使用github+hexo配合网络教程搭建了一个个人博客，遇到了一些问题。现在完整记下来，希望下次绕过这些坑。</p>
-<p><h4>本人博客：<a href="https://huruwo.github.io/">五谷山精分道长</a></h4><br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/#more">阅读全文 >></a>
+          <a href="/2016/12/30/android--UI--导航条toolbar/#more">阅读全文 >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -976,7 +977,7 @@ scnr.setText(file.getName());
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 </div>

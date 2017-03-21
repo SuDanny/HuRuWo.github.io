@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="精分道长" />
+
+
+
+<meta name="description" content="最近开发使用到了地图定位功能，这里记录一下使用过程。希望以后能更快开发。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="百度地图Api---定位功能">
+<meta property="og:url" content="https://huruwo.github.io/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/index.html">
+<meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="最近开发使用到了地图定位功能，这里记录一下使用过程。希望以后能更快开发。">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929093114179">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929093458510">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929093920496">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929093957480">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929094545765">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929100521225">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929100743244">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929101431083">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929101453511">
+<meta property="og:updated_time" content="2017-03-21T15:48:09.527Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="百度地图Api---定位功能">
+<meta name="twitter:description" content="最近开发使用到了地图定位功能，这里记录一下使用过程。希望以后能更快开发。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160929093114179">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="五谷观精分道长博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>百度地图Api---定位功能 | 五谷观精分道长博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">精分道长</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">想写诗的程序员</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔/">生活随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于本人</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">android开发者，python爱好者。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">精分道长</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">精分道长</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">想写诗的程序员</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔/">生活随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于本人</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-BaiDu地图API使用全解析--(1)---定位功能" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/" class="article-date">
+      <time datetime="2016-10-09T09:40:28.000Z" itemprop="datePublished">2016-10-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      百度地图Api---定位功能
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>最近开发使用到了地图定位功能，这里记录一下使用过程。希望以后能更快开发。</p>
+<hr>
+<a id="more"></a>
+<h1 id="申请密钥AK"><a href="#申请密钥AK" class="headerlink" title="申请密钥AK:"></a>申请密钥AK:</h1><h2 id="关于AK："><a href="#关于AK：" class="headerlink" title="关于AK："></a>关于AK：</h2><p>是用来验证百度地图API授权的，不仅是不同的app需要不同的A<br>K。即使是同一个app的不同包也要申请不同的AK。</p>
+<blockquote>
+<p>注意：<br>1.当您选择使用v4.0及之后版本的定位SDK时，需要先申请且配置AK，并在程序相应位置填写您的AK。（选择使用v3.3及之前版本SDK的开发者，不需要使用AK）</p>
+<p>2.每个AK仅且唯一对于1个应用验证有效，即对该AK配置环节中使用的包名匹配的应用有效。因此，多个应用（包括多个包名）需申请多个AK，或者对1个AK进行多次配置。</p>
+<p>3.若您需要在同一个工程中同时使用Android定位SDK和Android地图SDK，可以使用同一个AK。</p>
+</blockquote>
+<p>申请地址:<a href="http://lbsyun.baidu.com/apiconsole/key" target="_blank" rel="external"> http://lbsyun.baidu.com/apiconsole/key</a></p>
+<p>填表:<br><img src="http://img.blog.csdn.net/20160929093114179" alt="这里写图片描述"></p>
+<h2 id="关于SHA1的获取"><a href="#关于SHA1的获取" class="headerlink" title="关于SHA1的获取:"></a>关于SHA1的获取:</h2><p>在AndroidStudio里面:<br><img src="http://img.blog.csdn.net/20160929093458510" alt="这里写图片描述"><br>控制台打开keytool工具，输入keytool(配置环境变量”C:\Program Files\Java\jdk1.8.0_101\jre\bin”)<br><img src="http://img.blog.csdn.net/20160929093920496" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20160929093957480" alt="这里写图片描述"></p>
+<p>跳转到keystrose文件目录下，使用命令打开:<br>合起来命令就是<br><code>C:\Users\Administrator\.android&gt;keytool -list -keystore debug.keystore</code></p>
+<p><img src="http://img.blog.csdn.net/20160929094545765" alt="这里写图片描述"></p>
+<h1 id="下载SDK文件并导入"><a href="#下载SDK文件并导入" class="headerlink" title="下载SDK文件并导入:"></a>下载SDK文件并导入:</h1><p>我这里先选择<a href="http://lbsyun.baidu.com/index.php?title=android-locsdk/geosdk-android-download" target="_blank" rel="external">百度定位SDK下载地址</a></p>
+<p>关于.SO 和 JAR文件的导入:<br><a href="http://blog.csdn.net/lw_zhaoritian/article/details/52640355" target="_blank" rel="external"> androidstudio—导入jar文件和添加.SO文件 </a></p>
+<h1 id="使用定位SDK"><a href="#使用定位SDK" class="headerlink" title="使用定位SDK:"></a>使用定位SDK:</h1><p>这里根据文档写一个简单的demo:</p>
+<h2 id="设置AndroidManifest-xml"><a href="#设置AndroidManifest-xml" class="headerlink" title="设置AndroidManifest.xml"></a>设置AndroidManifest.xml</h2><p>1.在Application标签中声明SERVICE组件,每个APP拥有自己单独的定位SERVICE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;service android:name=&quot;com.baidu.location.f&quot; android:enabled=&quot;true&quot; android:process=&quot;:remote&quot;&gt;</div><div class="line">&lt;/service&gt;</div></pre></td></tr></table></figure>
+<p>【<strong>重要提醒</strong>】<br>定位SDKv3.1版本之后，以下权限已不需要，请取消声明，否则将由于Android 5.0多帐户系统加强权限管理而导致应用安装失败。 <code>&lt;uses-permission android:name=&quot;android.permission.BAIDU_LOCATION_SERVICE&quot;&gt;&lt;/uses-permission&gt;</code> </p>
+<p>2.权限添加:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 这个权限用于进行网络定位--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_COARSE_LOCATION&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 这个权限用于访问GPS定位--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 获取运营商信息，用于支持提供运营商信息相关的接口--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 用于读取手机当前的状态--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">&lt;!-- 访问网络，网络定位需要上网--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</div><div class="line">&lt;!-- SD卡读取权限，用户写入离线定位数据--&gt;</div><div class="line">&lt;uses-permission android:name=&quot;android.permission.MOUNT_UNMOUNT_FILESYSTEMS&quot;&gt;&lt;/uses-permission&gt;</div></pre></td></tr></table></figure>
+<p>3.设置AcessKey<br>Android定位SDK4.2及之后版本需要在Mainfest.xml正确设置Accesskey（AK），如果设置错误将会导致定位和地理围栏服务无法正常使用。</p>
+<p>设置AK，在Application标签中加入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;meta-data</div><div class="line">            android:name=&quot;com.baidu.lbsapi.API_KEY&quot;</div><div class="line">            android:value=&quot;AK&quot; /&gt;       //key:开发者申请的Key</div></pre></td></tr></table></figure>
+<p>贴一下整个修改后的文件:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    package=&quot;com.example.administrator.baiduditutest&quot;&gt;</div><div class="line"></div><div class="line">    &lt;!-- 这个权限用于进行网络定位--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.ACCESS_COARSE_LOCATION&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 这个权限用于访问GPS定位--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 获取运营商信息，用于支持提供运营商信息相关的接口--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 用于读取手机当前的状态--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;!-- 访问网络，网络定位需要上网--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</div><div class="line">    &lt;!-- SD卡读取权限，用户写入离线定位数据--&gt;</div><div class="line">    &lt;uses-permission android:name=&quot;android.permission.MOUNT_UNMOUNT_FILESYSTEMS&quot;&gt;&lt;/uses-permission&gt;</div><div class="line">    &lt;application</div><div class="line">        android:allowBackup=&quot;true&quot;</div><div class="line">        android:icon=&quot;@mipmap/ic_launcher&quot;</div><div class="line">        android:label=&quot;@string/app_name&quot;</div><div class="line">        android:supportsRtl=&quot;true&quot;</div><div class="line">        android:theme=&quot;@style/AppTheme&quot;&gt;</div><div class="line">        &lt;meta-data</div><div class="line">            android:name=&quot;com.baidu.lbsapi.API_KEY&quot;</div><div class="line">            android:value=&quot;填自己申请的AK&quot; /&gt;</div><div class="line">        &lt;activity android:name=&quot;.MainActivity&quot;&gt;</div><div class="line">            &lt;intent-filter&gt;</div><div class="line">                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</div><div class="line"></div><div class="line">                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</div><div class="line">            &lt;/intent-filter&gt;</div><div class="line">        &lt;/activity&gt;</div><div class="line">        &lt;service android:name=&quot;com.baidu.location.f&quot; android:enabled=&quot;true&quot; android:process=&quot;:remote&quot;&gt;</div><div class="line">        &lt;/service&gt;</div><div class="line">    &lt;/application&gt;</div><div class="line"></div><div class="line">&lt;/manifest&gt;</div></pre></td></tr></table></figure>
+<h2 id="使用定位服务-最好在真机上测试，打开GPS"><a href="#使用定位服务-最好在真机上测试，打开GPS" class="headerlink" title="使用定位服务:最好在真机上测试，打开GPS"></a>使用定位服务:最好在真机上测试，打开GPS</h2><p>直接引用文档:<br><strong>第一步，初始化LocationClient类</strong></p>
+<p>此处需要注意：LocationClient类必须在主线程中声明，需要Context类型的参数。</p>
+<p>Context需要时全进程有效的Context,推荐用getApplicationConext获取全进程有效的Context。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public LocationClient mLocationClient = null;</div><div class="line">public BDLocationListener myListener = new MyLocationListener();</div><div class="line"> </div><div class="line">public void onCreate() &#123;</div><div class="line">    mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类</div><div class="line">    mLocationClient.registerLocationListener( myListener );    //注册监听函数</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>LocationClient</strong>类是定位SDK的核心类，具体方法详见类参考。<br><strong>第二步，配置定位SDK参数</strong></p>
+<p>设置定位参数包括：定位模式（高精度定位模式、低功耗定位模式和仅用设备定位模式），返回坐标类型，是否打开GPS，是否返回地址信息、位置语义化信息、POI信息等等。</p>
+<p>LocationClientOption类，该类用来设置定位SDK的定位方式，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">private void initLocation()&#123;</div><div class="line">        LocationClientOption option = new LocationClientOption();</div><div class="line">        option.setLocationMode(LocationMode.Hight_Accuracy</div><div class="line">);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备</div><div class="line">        option.setCoorType(&quot;bd09ll&quot;);//可选，默认gcj02，设置返回的定位结果坐标系</div><div class="line">        int span=1000;</div><div class="line">        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的</div><div class="line">        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要</div><div class="line">        option.setOpenGps(true);//可选，默认false,设置是否使用gps</div><div class="line">        option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果</div><div class="line">        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”</div><div class="line">        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到</div><div class="line">option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死  </div><div class="line">        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集</div><div class="line">option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤GPS仿真结果，默认需要</div><div class="line">        mLocationClient.setLocOption(option);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>高精度定位模式：这种定位模式下，会同时使用网络定位和GPS定位，优先返回最高精度的定位结果；</p>
+<p>低功耗定位模式：这种定位模式下，不会使用GPS进行定位，只会使用网络定位（WiFi定位和基站定位）；</p>
+<p>仅用设备定位模式：这种定位模式下，不需要连接网络，只使用GPS进行定位，这种模式下不支持室内环境的定位。<br><strong>第三步，实现BDLocationListener接口</strong></p>
+<p>BDLocationListener为结果监听接口，异步获取定位结果，实现方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">public class MyLocationListener implements BDLocationListener &#123;</div><div class="line"> </div><div class="line">        @Override</div><div class="line">        public void onReceiveLocation(BDLocation location) &#123;</div><div class="line">            //Receive Location</div><div class="line">            StringBuffer sb = new StringBuffer(256);</div><div class="line">            sb.append(&quot;time : &quot;);</div><div class="line">            sb.append(location.getTime());</div><div class="line">            sb.append(&quot;\nerror code : &quot;);</div><div class="line">            sb.append(location.getLocType());</div><div class="line">            sb.append(&quot;\nlatitude : &quot;);</div><div class="line">            sb.append(location.getLatitude());</div><div class="line">            sb.append(&quot;\nlontitude : &quot;);</div><div class="line">            sb.append(location.getLongitude());</div><div class="line">            sb.append(&quot;\nradius : &quot;);</div><div class="line">            sb.append(location.getRadius());</div><div class="line">            if (location.getLocType() == BDLocation.TypeGpsLocation)&#123;// GPS定位结果</div><div class="line">                sb.append(&quot;\nspeed : &quot;);</div><div class="line">                sb.append(location.getSpeed());// 单位：公里每小时</div><div class="line">                sb.append(&quot;\nsatellite : &quot;);</div><div class="line">                sb.append(location.getSatelliteNumber());</div><div class="line">                sb.append(&quot;\nheight : &quot;);</div><div class="line">                sb.append(location.getAltitude());// 单位：米</div><div class="line">                sb.append(&quot;\ndirection : &quot;);</div><div class="line">                sb.append(location.getDirection());// 单位度</div><div class="line">                sb.append(&quot;\naddr : &quot;);</div><div class="line">                sb.append(location.getAddrStr());</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;gps定位成功&quot;);</div><div class="line"> </div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeNetWorkLocation)&#123;// 网络定位结果</div><div class="line">                sb.append(&quot;\naddr : &quot;);</div><div class="line">                sb.append(location.getAddrStr());</div><div class="line">                //运营商信息</div><div class="line">                sb.append(&quot;\noperationers : &quot;);</div><div class="line">                sb.append(location.getOperators());</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;网络定位成功&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeOffLineLocation) &#123;// 离线定位结果</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;离线定位成功，离线定位结果也是有效的&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeServerError) &#123;</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeNetWorkException) &#123;</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;网络不同导致定位失败，请检查网络是否通畅&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeCriteriaException) &#123;</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机&quot;);</div><div class="line">            &#125;</div><div class="line">sb.append(&quot;\nlocationdescribe : &quot;);</div><div class="line">                sb.append(location.getLocationDescribe());// 位置语义化信息</div><div class="line">                List&lt;Poi&gt; list = location.getPoiList();// POI数据</div><div class="line">                if (list != null) &#123;</div><div class="line">                    sb.append(&quot;\npoilist size = : &quot;);</div><div class="line">                    sb.append(list.size());</div><div class="line">                    for (Poi p : list) &#123;</div><div class="line">                        sb.append(&quot;\npoi= : &quot;);</div><div class="line">                        sb.append(p.getId() + &quot; &quot; + p.getName() + &quot; &quot; + p.getRank());</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            Log.i(&quot;BaiduLocationApiDem&quot;, sb.toString());</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>BDLocation类，封装了定位SDK的定位结果，在BDLocationListener的onReceive方法中获取。通过该类用户可以获取错误码，位置的坐标，精度半径等信息。具体方法请参考类参考。</p>
+<p>获取定位返回错误码：：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public int getLocType ( )</div></pre></td></tr></table></figure>
+<p>返回值：</p>
+<p>61 ： GPS定位结果，GPS定位成功。</p>
+<p>62 ： 无法获取有效定位依据，定位失败，请检查运营商网络或者WiFi网络是否正常开启，尝试重新请求定位。</p>
+<p>63 ： 网络异常，没有成功向服务器发起请求，请确认当前测试手机网络是否通畅，尝试重新请求定位。</p>
+<p>65 ： 定位缓存的结果。</p>
+<p>66 ： 离线定位结果。通过requestOfflineLocaiton调用时对应的返回结果。</p>
+<p>67 ： 离线定位失败。通过requestOfflineLocaiton调用时对应的返回结果。</p>
+<p>68 ： 网络连接失败时，查找本地离线定位时对应的返回结果。</p>
+<p>161： 网络定位结果，网络定位成功。</p>
+<p>162： 请求串密文解析失败，一般是由于客户端SO文件加载失败造成，请严格参照开发指南或demo开发，放入对应SO文件。</p>
+<p>167： 服务端定位失败，请您检查是否禁用获取位置信息权限，尝试重新请求定位。</p>
+<p>502： AK参数错误，请按照说明文档重新申请AK。</p>
+<p>505：AK不存在或者非法，请按照说明文档重新申请AK。</p>
+<p>601： AK服务被开发者自己禁用，请按照说明文档重新申请AK。</p>
+<p>602： key mcode不匹配，您的AK配置过程中安全码设置有问题，请确保：SHA1正确，“;”分号是英文状态；且包名是您当前运行应用的包名，请按照说明文档重新申请AK。</p>
+<p>501～700：AK验证失败，请按照说明文档重新申请AK。</p>
+<p>如果不能定位，请记住这个返回值，并到百度LBS开放平台论坛Andriod定位SDK版块中进行交流，网址：<a href="http://bbs.lbsyun.baidu.com/forum.php?mod=forumdisplay&amp;fid=10" target="_blank" rel="external">http://bbs.lbsyun.baidu.com/forum.php?mod=forumdisplay&amp;fid=10</a> 。若返回值是162~167，请将错误码、IMEI和定位时间反馈至邮箱loc-bugs@baidu.com，以便我们跟进追查问题。<br>第四步，开始定位</p>
+<p>开启：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mLocationClient.start();</div></pre></td></tr></table></figure>
+<p>start：启动定位SDK。 stop：关闭定位SDK。调用start之后只需要等待定位结果自动回调即可。</p>
+<p>开发者定位场景如果是单次定位的场景，在收到定位结果之后直接调用stop函数即可。</p>
+<p>如果stop之后仍然想进行定位，可以再次start等待定位结果回调即可。</p>
+<p>如果开发者想按照自己逻辑请求定位，可以在start之后按照自己的逻辑请求locationclient.requestLocation()函数，会主动触发定位SDK内部定位逻辑，等待定位回调即可。<br>位置提醒使用</p>
+<p>位置提醒最多提醒3次，3次过后将不再提醒。 假如需要再次提醒，或者要修改提醒点坐标，都可通过函数SetNotifyLocation()来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//位置提醒相关代码</div><div class="line">mNotifyer = new NotifyLister();</div><div class="line">mNotifyer.SetNotifyLocation(42.03249652949337,113.3129895882556,3000,&quot;gps&quot;);//4个参数代表要位置提醒的点的坐标，具体含义依次为：纬度，经度，距离范围，坐标系类型(gcj02,gps,bd09,bd09ll)</div><div class="line">mLocationClient.registerNotify(mNotifyer);</div><div class="line">//注册位置提醒监听事件后，可以通过SetNotifyLocation 来修改位置提醒设置，修改后立刻生效。</div><div class="line">//BDNotifyListner实现</div><div class="line">public class NotifyLister extends BDNotifyListener&#123;</div><div class="line">       public void onNotify(BDLocation mlocation, float distance)&#123;</div><div class="line"> 	   mVibrator01.vibrate(1000);//振动提醒已到设定位置附近</div><div class="line">       &#125;</div><div class="line">    &#125;</div><div class="line">//取消位置提醒</div><div class="line">mLocationClient.removeNotifyEvent(mNotifyer);</div></pre></td></tr></table></figure>
+<p>MainActivity.java</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div></pre></td><td class="code"><pre><div class="line">import android.os.Bundle;</div><div class="line">import android.support.v7.app.AppCompatActivity;</div><div class="line">import android.util.Log;</div><div class="line">import android.widget.TextView;</div><div class="line"></div><div class="line">import com.baidu.location.BDLocation;</div><div class="line">import com.baidu.location.BDLocationListener;</div><div class="line">import com.baidu.location.LocationClient;</div><div class="line">import com.baidu.location.LocationClientOption;</div><div class="line">import com.baidu.location.Poi;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line"></div><div class="line">    public LocationClient mLocationClient = null;</div><div class="line">    public BDLocationListener myListener = new MyLocationListener();</div><div class="line"></div><div class="line">    private TextView textView;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        textView=(TextView) findViewById(R.id.text);</div><div class="line">        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类</div><div class="line">        mLocationClient.registerLocationListener(myListener);    //注册监听函数</div><div class="line">        mLocationClient.start();</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void initLocation() &#123;</div><div class="line">        LocationClientOption option = new LocationClientOption();</div><div class="line">        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy</div><div class="line">        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备</div><div class="line">        option.setCoorType(&quot;bd09ll&quot;);//可选，默认gcj02，设置返回的定位结果坐标系</div><div class="line">        int span = 1000;</div><div class="line">        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的</div><div class="line">        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要</div><div class="line">        option.setOpenGps(true);//可选，默认false,设置是否使用gps</div><div class="line">        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果</div><div class="line">        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”</div><div class="line">        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到</div><div class="line">        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死</div><div class="line">        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集</div><div class="line">        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要</div><div class="line">        mLocationClient.setLocOption(option);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public class MyLocationListener implements BDLocationListener &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onReceiveLocation(BDLocation location) &#123;</div><div class="line">            //Receive Location</div><div class="line">            StringBuffer sb = new StringBuffer(256);</div><div class="line">            sb.append(&quot;time : &quot;);</div><div class="line">            sb.append(location.getTime());</div><div class="line">            sb.append(&quot;\nerror code : &quot;);</div><div class="line">            sb.append(location.getLocType());</div><div class="line">            sb.append(&quot;\nlatitude : &quot;);</div><div class="line">            sb.append(location.getLatitude());</div><div class="line">            sb.append(&quot;\nlontitude : &quot;);</div><div class="line">            sb.append(location.getLongitude());</div><div class="line">            sb.append(&quot;\nradius : &quot;);</div><div class="line">            sb.append(location.getRadius());</div><div class="line">            if (location.getLocType() == BDLocation.TypeGpsLocation) &#123;// GPS定位结果</div><div class="line">                sb.append(&quot;\nspeed : &quot;);</div><div class="line">                sb.append(location.getSpeed());// 单位：公里每小时</div><div class="line">                sb.append(&quot;\nsatellite : &quot;);</div><div class="line">                sb.append(location.getSatelliteNumber());</div><div class="line">                sb.append(&quot;\nheight : &quot;);</div><div class="line">                sb.append(location.getAltitude());// 单位：米</div><div class="line">                sb.append(&quot;\ndirection : &quot;);</div><div class="line">                sb.append(location.getDirection());// 单位度</div><div class="line">                sb.append(&quot;\naddr : &quot;);</div><div class="line">                sb.append(location.getAddrStr());</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;gps定位成功&quot;);</div><div class="line"></div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeNetWorkLocation) &#123;// 网络定位结果</div><div class="line">                sb.append(&quot;\naddr : &quot;);</div><div class="line">                sb.append(location.getAddrStr());</div><div class="line">                //运营商信息</div><div class="line">                sb.append(&quot;\noperationers : &quot;);</div><div class="line">                sb.append(location.getOperators());</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;网络定位成功&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeOffLineLocation) &#123;// 离线定位结果</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;离线定位成功，离线定位结果也是有效的&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeServerError) &#123;</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeNetWorkException) &#123;</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;网络不同导致定位失败，请检查网络是否通畅&quot;);</div><div class="line">            &#125; else if (location.getLocType() == BDLocation.TypeCriteriaException) &#123;</div><div class="line">                sb.append(&quot;\ndescribe : &quot;);</div><div class="line">                sb.append(&quot;无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机&quot;);</div><div class="line">            &#125;</div><div class="line">            sb.append(&quot;\nlocationdescribe : &quot;);</div><div class="line">            sb.append(location.getLocationDescribe());// 位置语义化信息</div><div class="line">            List&lt;Poi&gt; list = location.getPoiList();// POI数据</div><div class="line">            if (list != null) &#123;</div><div class="line">                sb.append(&quot;\npoilist size = : &quot;);</div><div class="line">                sb.append(list.size());</div><div class="line">                for (Poi p : list) &#123;</div><div class="line">                    sb.append(&quot;\npoi= : &quot;);</div><div class="line">                    sb.append(p.getId() + &quot; &quot; + p.getName() + &quot; &quot; + p.getRank());</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            Log.i(&quot;BaiduLocationApiDem&quot;, sb.toString());</div><div class="line">            textView.setText(sb.toString());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试:"></a>测试:</h2><p>模拟器:<br><img src="http://img.blog.csdn.net/20160929100521225" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20160929100743244" alt="这里写图片描述"><br>真机:<br><img src="http://img.blog.csdn.net/20160929101431083" alt="这里写图片描述"><br><img src="http://img.blog.csdn.net/20160929101453511" alt="这里写图片描述"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/">百度地图Api---定位功能</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2016-10-09, 17:40:28</p>
+        <p><span>最后更新:</span>2017-03-21, 23:48:09</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/" title="百度地图Api---定位功能">https://huruwo.github.io/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/10/09/BaiDu地图API使用全解析--(2)---地图功能/">
+                    百度地图Api---地图显示
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/16/android获取网页源码接口JSON数据/">
+                    Android--GsonFormat错误解决
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#申请密钥AK"><span class="toc-number">1.</span> <span class="toc-text">申请密钥AK:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于AK："><span class="toc-number">1.1.</span> <span class="toc-text">关于AK：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于SHA1的获取"><span class="toc-number">1.2.</span> <span class="toc-text">关于SHA1的获取:</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下载SDK文件并导入"><span class="toc-number">2.</span> <span class="toc-text">下载SDK文件并导入:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用定位SDK"><span class="toc-number">3.</span> <span class="toc-text">使用定位SDK:</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#设置AndroidManifest-xml"><span class="toc-number">3.1.</span> <span class="toc-text">设置AndroidManifest.xml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用定位服务-最好在真机上测试，打开GPS"><span class="toc-number">3.2.</span> <span class="toc-text">使用定位服务:最好在真机上测试，打开GPS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">3.3.</span> <span class="toc-text">测试:</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"百度地图Api---定位功能　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/" data-title="百度地图Api---定位功能" data-url="https://huruwo.github.io/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/10/09/BaiDu地图API使用全解析--(2)---地图功能/" title="上一篇: 百度地图Api---地图显示">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/16/android获取网页源码接口JSON数据/" title="下一篇: Android--GsonFormat错误解决">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/android--UI--ViewPager的伪循环效果/">Android--ViewPager的伪循环效果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/Android插件GsonFormat发生parse err !!/">Android--GsonFormat错误解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/android--UI--导航条toolbar/">Android--Toolbar使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/android--UI---侧滑drawerLayout/">Android--drawerLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android--UI--SwipeRefreshLayout的使用/">Android--SwipeRefreshLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerViewd的基本使用/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/android--UI--listview使用和优化/">Android--ListView使用和优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/android--UI--CardView的使用/">Android--CardView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/15/网站访问使用HttpClien出现SSl证书问题/">HttpClient出现SSL证书问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/androidstudio---导入jar文件和添加.SO文件/">AndroidStudio导入SO库和Jar文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(2)---地图功能/">百度地图Api---地图显示</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/">百度地图Api---定位功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/android获取网页源码接口JSON数据/">Android--GsonFormat错误解决</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 精分道长
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

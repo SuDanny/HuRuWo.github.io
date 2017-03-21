@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="精分道长" />
+
+
+
+<meta name="description" content="关于瀑布流:
+瀑布流，又称瀑布流式布局。是比较流行的一种网站页面布局，视觉表现为参差不齐的多栏布局，随着页面滚动条向下滚动，这种布局还会不断加载数据块并附加至当前尾部。最早采用此布局的网站是Pinterest，逐渐在国内流行开来。国内大多数清新站基本为这类风格前面已经讲了基础知识，现在来实现一个瀑布流的显示。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android--RecyclerView使用详解">
+<meta property="og:url" content="https://huruwo.github.io/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/index.html">
+<meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="关于瀑布流:
+瀑布流，又称瀑布流式布局。是比较流行的一种网站页面布局，视觉表现为参差不齐的多栏布局，随着页面滚动条向下滚动，这种布局还会不断加载数据块并附加至当前尾部。最早采用此布局的网站是Pinterest，逐渐在国内流行开来。国内大多数清新站基本为这类风格前面已经讲了基础知识，现在来实现一个瀑布流的显示。">
+<meta property="og:image" content="http://img.blog.csdn.net/20160915234156861">
+<meta property="og:image" content="http://img.blog.csdn.net/20160916233446769">
+<meta property="og:image" content="http://img.blog.csdn.net/20160917123242659">
+<meta property="og:updated_time" content="2017-03-21T15:48:52.096Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android--RecyclerView使用详解">
+<meta name="twitter:description" content="关于瀑布流:
+瀑布流，又称瀑布流式布局。是比较流行的一种网站页面布局，视觉表现为参差不齐的多栏布局，随着页面滚动条向下滚动，这种布局还会不断加载数据块并附加至当前尾部。最早采用此布局的网站是Pinterest，逐渐在国内流行开来。国内大多数清新站基本为这类风格前面已经讲了基础知识，现在来实现一个瀑布流的显示。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160915234156861">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="五谷观精分道长博客" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Android--RecyclerView使用详解 | 五谷观精分道长博客</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">精分道长</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">想写诗的程序员</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/随笔/">生活随笔</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于本人</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">android开发者，python爱好者。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">精分道长</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">精分道长</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">想写诗的程序员</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/随笔/">生活随笔</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于本人</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/1458476478@qq.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/HuRuWo" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="http://www.jianshu.com/u/d84f93a917c2" title="简书"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-android---UI---RecyclerView实现瀑布流(1)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/" class="article-date">
+      <time datetime="2016-12-22T10:45:58.000Z" itemprop="datePublished">2016-12-22</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android--RecyclerView使用详解
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="关于瀑布流"><a href="#关于瀑布流" class="headerlink" title="关于瀑布流:"></a>关于瀑布流:</h2><blockquote>
+<p>瀑布流，又称瀑布流式布局。是比较流行的一种网站页面布局，视觉表现为参差不齐的多栏布局，随着页面滚动条向下滚动，这种布局还会不断加载数据块并附加至当前尾部。最早采用此布局的网站是Pinterest，逐渐在国内流行开来。国内大多数清新站基本为这类风格<br>前面已经讲了基础知识，现在来实现一个瀑布流的显示。<br><a id="more"></a><br>基础文章:<a href="http://blog.csdn.net/lw_zhaoritian/article/details/52527762" target="_blank" rel="external">android—UI—RecyclerViewd的基本使用(1)</a></p>
+</blockquote>
+<hr>
+<p>参考文章:<a href="http://www.jianshu.com/p/402466ae7b15" target="_blank" rel="external">这里写链接内容</a></p>
+<hr>
+<h2 id="一-包引入"><a href="#一-包引入" class="headerlink" title="一.包引入"></a>一.包引入</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    <span class="function">compile <span class="title">fileTree</span><span class="params">(dir: <span class="string">'libs'</span>, include: [<span class="string">'*.jar'</span>])</span></span></div><div class="line">    testCompile 'junit:junit:4.12'</div><div class="line">    compile 'com.android.support:appcompat-v7:24.2.0'</div><div class="line">    <span class="comment">//包引入</span></div><div class="line">    compile 'com.android.support:recyclerview-v7:+'</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="二-布局文件"><a href="#二-布局文件" class="headerlink" title="二.布局文件"></a>二.布局文件</h2><p><strong>主界面引入RecyclerView:</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:paddingBottom</span>=<span class="string">"@dimen/activity_vertical_margin"</span></div><div class="line">    <span class="attr">android:paddingLeft</span>=<span class="string">"@dimen/activity_horizontal_margin"</span></div><div class="line">    <span class="attr">android:paddingRight</span>=<span class="string">"@dimen/activity_horizontal_margin"</span></div><div class="line">    <span class="attr">android:paddingTop</span>=<span class="string">"@dimen/activity_vertical_margin"</span></div><div class="line">    <span class="attr">tools:context</span>=<span class="string">"com.example.administrator.newtestpubu.MainActivity"</span>&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">android.support.v7.widget.RecyclerView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/recycler"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;<span class="tag">&lt;/<span class="name">android.support.v7.widget.RecyclerView</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p><strong>RecyclerView的item布局文件:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">    android:orientation=&quot;vertical&quot;</div><div class="line">    android:layout_width=&quot;wrap_content&quot;</div><div class="line">    android:layout_height=&quot;wrap_content&quot;</div><div class="line">    android:background=&quot;@color/white&quot;&gt;</div><div class="line"></div><div class="line">    &lt;ImageView</div><div class="line">        android:id=&quot;@+id/masonry_item_img&quot;</div><div class="line">        android:layout_width=&quot;match_parent&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:adjustViewBounds=&quot;true&quot;</div><div class="line">        android:scaleType=&quot;centerCrop&quot;/&gt;</div><div class="line">    &lt;TextView</div><div class="line">        android:id=&quot;@+id/masonry_item_title&quot;</div><div class="line">        android:layout_width=&quot;match_parent&quot;</div><div class="line">        android:layout_height=&quot;wrap_content&quot;</div><div class="line">        android:gravity=&quot;center&quot;/&gt;</div><div class="line">&lt;/LinearLayout&gt;</div></pre></td></tr></table></figure></p>
+<p>这里添加一个ImageView和TextView</p>
+<h2 id="适配器类MasonryAdapter："><a href="#适配器类MasonryAdapter：" class="headerlink" title="适配器类MasonryAdapter："></a>适配器类MasonryAdapter：</h2><p>继承RecyclerView.Adapter<masonryadapter.masonryview>，并重写里面的方法:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> List&lt;Product&gt; products;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MasonryAdapter</span><span class="params">(List&lt;Product&gt; list)</span> </span>&#123;</div><div class="line">        products = list;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> MasonryView <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup viewGroup, <span class="keyword">int</span> i)</span> </span>&#123;</div><div class="line">        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.masonry_item, viewGroup, <span class="keyword">false</span>);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MasonryView(view);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(MasonryView masonryView, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">        masonryView.imageView.setImageResource(products.get(position).getImg());</div><div class="line">        masonryView.textView.setText(products.get(position).getTitle());</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> products.size();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MasonryView</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</div><div class="line"></div><div class="line">        ImageView imageView;</div><div class="line">        TextView textView;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">MasonryView</span><span class="params">(View itemView)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(itemView);</div><div class="line">            imageView = (ImageView) itemView.findViewById(R.id.masonry_item_img);</div><div class="line">            textView = (TextView) itemView.findViewById(R.id.masonry_item_title);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure></masonryadapter.masonryview></p>
+<p>三个方法:<br><strong>1</strong>. onCreateViewHolder()` 方法用于找到子item的布局文件，并返回视图。</p>
+<p><strong>2</strong>. onBindViewHolder()<code>用于数据绑定，从列表里面获取数据，注意其中一个参数</code>MasonryView masonryView<code>是需要自定义的。
+继承</code>RecyclerView.ViewHolder` 用于找到item里面的布局控件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public static class MasonryView extends RecyclerView.ViewHolder &#123;</div><div class="line"></div><div class="line">        ImageView imageView;</div><div class="line">        TextView textView;</div><div class="line"></div><div class="line">        public MasonryView(View itemView) &#123;</div><div class="line">            super(itemView);</div><div class="line">            imageView = (ImageView) itemView.findViewById(R.id.masonry_item_img);</div><div class="line">            textView = (TextView) itemView.findViewById(R.id.masonry_item_title);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>3</strong>.<code>getItemCount</code>返回条目总数。</p>
+<h2 id="自定义类Product"><a href="#自定义类Product" class="headerlink" title="自定义类Product:"></a>自定义类Product:</h2><p>这个不解释，就是一个类，包括了所需的变量。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Product</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> img;</div><div class="line">    <span class="keyword">private</span> String title;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Product</span><span class="params">(<span class="keyword">int</span> img, String title)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.img = img;</div><div class="line">        <span class="keyword">this</span>.title = title;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getImg</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> img;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setImg</span><span class="params">(<span class="keyword">int</span> img)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.img = img;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTitle</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> title;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(String title)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.title = title;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="使用RecyclerView："><a href="#使用RecyclerView：" class="headerlink" title="使用RecyclerView："></a>使用RecyclerView：</h2><p>在主Activity里面使用RecyclerView：<br>1.定义Product List 并做数据初始化，添加数据。<br>2.找到RecyclerView控件<br>3.设置LayoutManager，设置布局为 流式布局<code>StaggeredGridLayoutManager</code>，宽度为2.<br>4.绑定数据Adaper。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        recyclerView = (RecyclerView) findViewById(R.id.recycler);</div><div class="line">        //设置layoutManager</div><div class="line">        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));</div><div class="line">        //设置adapter</div><div class="line">        initData();</div><div class="line">        Log.d(&quot;xxxx&quot;, productList.toString());</div><div class="line">        MasonryAdapter adapter = new MasonryAdapter(productList);</div><div class="line">        recyclerView.setAdapter(adapter);</div><div class="line">        &#125;</div><div class="line">        public void initData() &#123;</div><div class="line">        productList = new ArrayList&lt;Product&gt;();</div><div class="line">        productList.add(new Product(R.drawable.ic_1, &quot;美女1&quot;));</div><div class="line">        productList.add(new Product(R.drawable.ic_2, &quot;美女1&quot;));</div><div class="line">        productList.add(new Product(R.drawable.ic_3, &quot;美女1&quot;));</div><div class="line">        productList.add(new Product(R.drawable.ic_1, &quot;美女1&quot;));</div><div class="line">        productList.add(new Product(R.drawable.ic_2, &quot;美女1&quot;));</div><div class="line">        productList.add(new Product(R.drawable.ic_3, &quot;美女1&quot;));</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>效果</strong>:</p>
+<p><img src="http://img.blog.csdn.net/20160915234156861" alt="这里写图片描述"></p>
+<p><strong>效果还不错:</strong></p>
+<h2 id="添加分割栏"><a href="#添加分割栏" class="headerlink" title="添加分割栏:"></a>添加分割栏:</h2><p>大家都知道<code>ItemDecoration</code> 用于给每个item添加间隔的。<br>写一个<code>SpacesItemDecoration</code> 类继承 <code>RecyclerView.ItemDecoration</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public class SpacesItemDecoration extends RecyclerView.ItemDecoration &#123;</div><div class="line"></div><div class="line">    private int space;</div><div class="line"></div><div class="line">    public SpacesItemDecoration(int space) &#123;</div><div class="line">        this.space = space;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) &#123;</div><div class="line">        outRect.left = space;</div><div class="line">        outRect.right = space;</div><div class="line">        outRect.bottom = space;</div><div class="line">        if (parent.getChildAdapterPosition(view) == 0) &#123;</div><div class="line">            outRect.top = space;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>间隔默认是透明的</strong><br>这是原作者写的，继承后只重写了<code>getItemOffsets</code>一个方法,通过导入space的数值设置边框的大小，并判断是否是顶部的。</p>
+<p><strong>Activity引用:</strong><br>添加在onCreate()里面:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//设置item之间的间隔</div><div class="line">        SpacesItemDecoration decoration = new SpacesItemDecoration(100);</div><div class="line">        recyclerView.addItemDecoration(decoration);</div></pre></td></tr></table></figure></p>
+<p><strong>为了查看明显，设置的间隔比较大。</strong><br><img src="http://img.blog.csdn.net/20160916233446769" alt="这里写图片描述"></p>
+<p>是不是图片变小了，是因为间隔的原因。<br><strong>添加特效边框</strong>:<br>来自鸿洋的博客。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">public class DividerGridItemDecoration extends RecyclerView.ItemDecoration &#123;</div><div class="line">    private static final int[] ATTRS = new int[]&#123;android.R.attr.listDivider&#125;;</div><div class="line">    private Drawable mDivider;</div><div class="line"></div><div class="line">    public DividerGridItemDecoration(Context context) &#123;</div><div class="line">        final TypedArray a = context.obtainStyledAttributes(ATTRS);</div><div class="line">        mDivider = a.getDrawable(0);</div><div class="line">        a.recycle();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) &#123;</div><div class="line">        //横线有效</div><div class="line">        drawHorizontal(c, parent);</div><div class="line">        //竖线无效</div><div class="line">        drawVertical(c, parent);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void drawHorizontal(Canvas c, RecyclerView parent) &#123;</div><div class="line">        int childCount = parent.getChildCount();</div><div class="line">        for (int i = 0; i &lt; childCount; i++) &#123;</div><div class="line">            final View child = parent.getChildAt(i);</div><div class="line">            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child</div><div class="line">                    .getLayoutParams();</div><div class="line">            final int left = child.getLeft() - params.leftMargin;</div><div class="line">            final int right = child.getRight() + params.rightMargin</div><div class="line">                    + mDivider.getIntrinsicWidth();</div><div class="line">            final int top = child.getBottom() + params.bottomMargin;</div><div class="line">            final int bottom = top + mDivider.getIntrinsicHeight();</div><div class="line">            mDivider.setBounds(left, top, right, bottom);</div><div class="line">            mDivider.draw(c);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void drawVertical(Canvas c, RecyclerView parent) &#123;</div><div class="line">        final int childCount = parent.getChildCount();</div><div class="line"></div><div class="line">        // 在每一个子控件的右侧画线</div><div class="line">        for (int i = 0; i &lt; childCount; i++) &#123;</div><div class="line">            final View child = parent.getChildAt(i);</div><div class="line">            int right = child.getRight() - child.getPaddingRight();</div><div class="line">            int left = right - mDivider.getIntrinsicWidth();</div><div class="line">            final int top = child.getTop() + child.getPaddingTop();</div><div class="line">            final int bottom = child.getTop() + child.getHeight() - child.getPaddingBottom();</div><div class="line"></div><div class="line">            mDivider.setBounds(left, top, right, bottom);</div><div class="line">            mDivider.draw(c);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    //    @Override</div><div class="line">//    public void getItemOffsets(Rect outRect, int itemPosition,</div><div class="line">//                               RecyclerView parent) &#123;</div><div class="line">//        int spanCount = getSpanCount(parent);</div><div class="line">//        int childCount = parent.getAdapter().getItemCount();</div><div class="line">//        if (isLastRaw(parent, itemPosition, spanCount, childCount))// 如果是最后一行，则不需要绘制底部</div><div class="line">//        &#123;</div><div class="line">//            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);</div><div class="line">//        &#125; else if (isLastColum(parent, itemPosition, spanCount, childCount))// 如果是最后一列，则不需要绘制右边</div><div class="line">//        &#123;</div><div class="line">//            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());</div><div class="line">//        &#125; else &#123;</div><div class="line">//            outRect.set(0, 0, mDivider.getIntrinsicWidth(),</div><div class="line">//                    mDivider.getIntrinsicHeight());</div><div class="line">//        &#125;</div><div class="line">//    &#125;</div><div class="line">// Item之间的留白</div><div class="line">    @Override</div><div class="line">    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) &#123;</div><div class="line">        outRect.set(0, 0, mDivider.getIntrinsicWidth(), mDivider.getIntrinsicHeight());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里使用了系统的styles 所以可以在文件里修改样式。详见基础文章。</p>
+<p><img src="http://img.blog.csdn.net/20160917123242659" alt="这里写图片描述"></p>
+<p><strong>这里只显示了底下的边框。左右边框没有画出来。没有解决。</strong></p>
+<font color="red">PS 问题解决—-&gt;shape布局文件 添加宽度即可</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;size android:height=&quot;4dp&quot; android:width=&quot;3dp&quot;/&gt;</div></pre></td></tr></table></figure>
+<h2 id="添加删除动画"><a href="#添加删除动画" class="headerlink" title="添加删除动画"></a>添加删除动画</h2><p>见基础文章</p>
+<h2 id="点击事件和长按事件"><a href="#点击事件和长按事件" class="headerlink" title="点击事件和长按事件"></a>点击事件和长按事件</h2><p>见基础文章</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/">Android--RecyclerView使用详解</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2016-12-22, 18:45:58</p>
+        <p><span>最后更新:</span>2017-03-21, 23:48:52</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/" title="Android--RecyclerView使用详解">https://huruwo.github.io/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/">
+                    Android--RecyclerView使用详解
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/12/22/android---UI---RecyclerViewd的基本使用/">
+                    Android--RecyclerView使用详解
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#关于瀑布流"><span class="toc-number">1.</span> <span class="toc-text">关于瀑布流:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一-包引入"><span class="toc-number">2.</span> <span class="toc-text">一.包引入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-布局文件"><span class="toc-number">3.</span> <span class="toc-text">二.布局文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#适配器类MasonryAdapter："><span class="toc-number">4.</span> <span class="toc-text">适配器类MasonryAdapter：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义类Product"><span class="toc-number">5.</span> <span class="toc-text">自定义类Product:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用RecyclerView："><span class="toc-number">6.</span> <span class="toc-text">使用RecyclerView：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加分割栏"><span class="toc-number">7.</span> <span class="toc-text">添加分割栏:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#添加删除动画"><span class="toc-number">8.</span> <span class="toc-text">添加删除动画</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#点击事件和长按事件"><span class="toc-number">9.</span> <span class="toc-text">点击事件和长按事件</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Android--RecyclerView使用详解　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/22/android---UI---RecyclerView实现瀑布流(1)/" data-title="Android--RecyclerView使用详解" data-url="https://huruwo.github.io/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/" title="上一篇: Android--RecyclerView使用详解">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/12/22/android---UI---RecyclerViewd的基本使用/" title="下一篇: Android--RecyclerView使用详解">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/android--UI--ViewPager的伪循环效果/">Android--ViewPager的伪循环效果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/Android插件GsonFormat发生parse err !!/">Android--GsonFormat错误解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/android--UI--导航条toolbar/">Android--Toolbar使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/android--UI---侧滑drawerLayout/">Android--drawerLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android--UI--SwipeRefreshLayout的使用/">Android--SwipeRefreshLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerViewd的基本使用/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/android--UI--listview使用和优化/">Android--ListView使用和优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/android--UI--CardView的使用/">Android--CardView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/15/网站访问使用HttpClien出现SSl证书问题/">HttpClient出现SSL证书问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/androidstudio---导入jar文件和添加.SO文件/">AndroidStudio导入SO库和Jar文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(2)---地图功能/">百度地图Api---地图显示</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/">百度地图Api---定位功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/android获取网页源码接口JSON数据/">Android--GsonFormat错误解决</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016-2017 精分道长
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
