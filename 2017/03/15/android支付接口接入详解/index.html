@@ -27,7 +27,7 @@
 1、首先，你要有一间五证齐全的公司2、然后用这些材料，去支付宝注册一个商家账户（审核周期大概5个工作日），或者微信的开发者账号（审核周期大概5个工作日，300元费用），或者银联、paypal（这俩个我不太熟悉）">
 <meta property="og:image" content="https://pic3.zhimg.com/16a968c1b05720be7ecb6cde07c1de4e_b.jpg">
 <meta property="og:image" content="https://pay.weixin.qq.com/wiki/doc/api/img/chapter8_3_1.png">
-<meta property="og:updated_time" content="2017-04-28T10:09:04.495Z">
+<meta property="og:updated_time" content="2017-04-28T10:19:11.621Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android支付接口接入详解">
 <meta name="twitter:description" content="前言支付对于app是常见的功能，但是由于支付功能是基于第三方的应用。所以开发起来比较麻烦，对于整个过程的开发的实施，我比较仔细的记录下来。方便日后查阅以及作为参考资料。整个流程大致如下:
@@ -328,9 +328,9 @@
           
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>支付对于app是常见的功能，但是由于支付功能是基于第三方的应用。所以开发起来比较麻烦，对于整个过程的开发的实施，我比较仔细的记录下来。方便日后查阅以及作为参考资料。<br>整个流程大致如下:</p>
 <blockquote>
-<p>1、首先，你要有一间五证齐全的公司<br>2、然后用这些材料，去支付宝注册一个商家账户（审核周期大概5个工作日），或者微信的开发者账号（审核周期大概5个工作日，300元费用），或者银联、paypal（这俩个我不太熟悉）<br>3、然后申请开通手机端的支付产品，支付宝的话就是“移动快捷支付”（支付时跳转到支付宝APP，需要用户安装支付宝APP），或者“移动WAP网页支付”（支付时打开一个WebView里边登陆支付宝进行支付），微信的话，需要你的app已经上架有了APPID，才能开通；大概也是5个工作日<br>4、然后就是技术集成了，支付宝和微信会提供给你一个32位的秘钥，用于防篡改效验（或者你采用RSA加密的话，需要给他上传你的公钥）；你需要有一个自己的支付后台服务器，来处理加密、获取支付令牌的后台处理；技术集成比较复杂就难以在这里细说了，大概流程如下图：<img src="https://pic3.zhimg.com/16a968c1b05720be7ecb6cde07c1de4e_b.jpg" alt=""><br>5、把你的APP和你的支付后台接通，就可以在APP端使用第三方支付了</p>
-</blockquote>
-<h1 id="动手前的准备"><a href="#动手前的准备" class="headerlink" title="动手前的准备"></a>动手前的准备</h1><p>选择支付种类，支付宝和微信两个主流的。当然还有银联方式支付。公司只采用了前两种支付方式，对于第三种原理也是一样的。</p>
+<p>1、首先，你要有一间五证齐全的公司<br>2、然后用这些材料，去支付宝注册一个商家账户（审核周期大概5个工作日），或者微信的开发者账号（审核周期大概5个工作日，300元费用），或者银联、paypal（这俩个我不太熟悉）<br>3、然后申请开通手机端的支付产品，支付宝的话就是“移动快捷支付”（支付时跳转到支付宝APP，需要用户安装支付宝APP），或者“移动WAP网页支付”（支付时打开一个WebView里边登陆支付宝进行支付），微信的话，需要你的app已经上架有了APPID，才能开通；大概也是5个工作日<br>4、然后就是技术集成了，支付宝和微信会提供给你一个32位的秘钥，用于防篡改效验（或者你采用RSA加密的话，需要给他上传你的公钥）；你需要有一个自己的支付后台服务器，来处理加密、获取支付令牌的后台处理；技术集成比较复杂就难以在这里细说了，大概流程如下图：<img src="https://pic3.zhimg.com/16a968c1b05720be7ecb6cde07c1de4e_b.jpg" alt=""><br>5、把你的APP和你的支付后台接通，就可以在APP端使用第三方支付了<br><a id="more"></a></p>
+<h1 id="动手前的准备"><a href="#动手前的准备" class="headerlink" title="动手前的准备"></a>动手前的准备</h1></blockquote>
+<p>选择支付种类，支付宝和微信两个主流的。当然还有银联方式支付。公司只采用了前两种支付方式，对于第三种原理也是一样的。</p>
 <h2 id="官方文档地址"><a href="#官方文档地址" class="headerlink" title="官方文档地址"></a>官方文档地址</h2><p><a href="https://doc.open.alipay.com/doc2/detail.htm?spm=a219a.7629140.0.0.JuZcSc&amp;treeId=54&amp;articleId=104509&amp;docType=1" target="_blank" rel="external">支付宝sdk以及demo下载地址：</a></p>
 <p><a href="https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=8_1" target="_blank" rel="external">微信sdk以及demo下载地址：</a></p>
 <h2 id="帐号申请"><a href="#帐号申请" class="headerlink" title="帐号申请"></a>帐号申请</h2><p>都是需要企业认证才能有资格申请，如果企业证件齐全很快就能申请好。这里得到关键的开发者接口Id。为随后的开发做准备。</p>
@@ -379,7 +379,7 @@
         <p><span>本文标题:</span><a href="/2017/03/15/android支付接口接入详解/">android支付接口接入详解</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
         <p><span>发布时间:</span>2017-03-15, 18:40:28</p>
-        <p><span>最后更新:</span>2017-04-28, 18:09:04</p>
+        <p><span>最后更新:</span>2017-04-28, 18:19:11</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/03/15/android支付接口接入详解/" title="android支付接口接入详解">https://huruwo.github.io/2017/03/15/android支付接口接入详解/</a>
             <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2017/03/15/android支付接口接入详解/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
