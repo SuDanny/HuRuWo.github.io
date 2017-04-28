@@ -14,16 +14,26 @@
 <meta name="author" content="精分道长" />
 
 
-    
-    
 
+<meta name="description" content="前言支付对于app是常见的功能，但是由于支付功能是基于第三方的应用。所以开发起来比较麻烦，对于整个过程的开发的实施，我比较仔细的记录下来。方便日后查阅以及作为参考资料。整个流程大致如下:
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="五谷观精分道长博客">
-<meta property="og:url" content="https://huruwo.github.io/index.html">
+1、首先，你要有一间五证齐全的公司2、然后用这些材料，去支付宝注册一个商家账户（审核周期大概5个工作日），或者微信的开发者账号（审核周期大概5个工作日，300元费用），或者银联、paypal（这俩个我不太熟悉）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android支付接口接入详解">
+<meta property="og:url" content="https://huruwo.github.io/2017/03/15/android支付接口接入详解/index.html">
 <meta property="og:site_name" content="五谷观精分道长博客">
+<meta property="og:description" content="前言支付对于app是常见的功能，但是由于支付功能是基于第三方的应用。所以开发起来比较麻烦，对于整个过程的开发的实施，我比较仔细的记录下来。方便日后查阅以及作为参考资料。整个流程大致如下:
+
+1、首先，你要有一间五证齐全的公司2、然后用这些材料，去支付宝注册一个商家账户（审核周期大概5个工作日），或者微信的开发者账号（审核周期大概5个工作日，300元费用），或者银联、paypal（这俩个我不太熟悉）">
+<meta property="og:image" content="https://pic3.zhimg.com/16a968c1b05720be7ecb6cde07c1de4e_b.jpg">
+<meta property="og:image" content="https://pay.weixin.qq.com/wiki/doc/api/img/chapter8_3_1.png">
+<meta property="og:updated_time" content="2017-04-28T10:09:04.495Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="五谷观精分道长博客">
+<meta name="twitter:title" content="android支付接口接入详解">
+<meta name="twitter:description" content="前言支付对于app是常见的功能，但是由于支付功能是基于第三方的应用。所以开发起来比较麻烦，对于整个过程的开发的实施，我比较仔细的记录下来。方便日后查阅以及作为参考资料。整个流程大致如下:
+
+1、首先，你要有一间五证齐全的公司2、然后用这些材料，去支付宝注册一个商家账户（审核周期大概5个工作日），或者微信的开发者账号（审核周期大概5个工作日，300元费用），或者银联、paypal（这俩个我不太熟悉）">
+<meta name="twitter:image" content="https://pic3.zhimg.com/16a968c1b05720be7ecb6cde07c1de4e_b.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -53,7 +63,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>五谷观精分道长博客</title>
+<title>android支付接口接入详解 | 五谷观精分道长博客</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -62,8 +72,8 @@
     var yiliaConfig = {
         fancybox: true,
         animate: false,
-        isHome: true,
-        isPost: false,
+        isHome: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -272,9 +282,7 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-android支付接口接入详解" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-android支付接口接入详解" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2017/03/15/android支付接口接入详解/" class="article-date">
@@ -292,12 +300,27 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/15/android支付接口接入详解/">android支付接口接入详解</a>
+    <h1 class="article-title" itemprop="name">
+      android支付接口接入详解
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -349,665 +372,138 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-        <div class="article-pop-out tagcloud">
-          <a class="">置顶</a>
-        </div>
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
   
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-斩码师开发日志-初步版本完成" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/03/05/斩码师开发日志-初步版本完成/" class="article-date">
-      <time datetime="2017-03-05T13:26:54.000Z" itemprop="datePublished">2017-03-05</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
     
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>   经过两个周末的开发，初步的版本确定下来。<br>但是还有诸多问题需要一一改进。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-        <div class="article-pop-out tagcloud">
-          <a class="">置顶</a>
-        </div>
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/03/05/斩码师开发日志-初步版本完成/#more">阅读全文 >></a>
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/03/15/android支付接口接入详解/">android支付接口接入详解</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">精分道长</a></p>
+        <p><span>发布时间:</span>2017-03-15, 18:40:28</p>
+        <p><span>最后更新:</span>2017-04-28, 18:09:04</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/03/15/android支付接口接入详解/" title="android支付接口接入详解">https://huruwo.github.io/2017/03/15/android支付接口接入详解/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://huruwo.github.io/2017/03/15/android支付接口接入详解/　　作者: 精分道长" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-独立开发一款App" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/02/19/独立开发一款App/" class="article-date">
-      <time datetime="2017-02-19T05:34:33.000Z" itemprop="datePublished">2017-02-19</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>想做一个属于个人的项目。看见了一款刷单词的软件《百词斩》觉得很不错。于是希望能够独立开发一款类似的软件，用来刷面试题（或者在闲暇时间里阅读专业知识）。</p>
-<h1 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>只是个人想有这么一款软件，主要面对即将毕业找工作的学生。<br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-        <div class="article-pop-out tagcloud">
-          <a class="">置顶</a>
-        </div>
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/02/19/独立开发一款App/#more">阅读全文 >></a>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
-      
-      <div class="clearfix"></div>
     </div>
-    
-  </div>
-  
-</article>
 
 
 
-
-
-
-
-
-
-  
-    <article id="post-Android-日常开发常用代码总结" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/03/09/Android-日常开发常用代码总结/" class="article-date">
-      <time datetime="2017-03-09T07:40:28.000Z" itemprop="datePublished">2017-03-09</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
+    <nav id="article-nav">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="文件变为二进制字节流再变成String字符串"><a href="#文件变为二进制字节流再变成String字符串" class="headerlink" title="文件变为二进制字节流再变成String字符串"></a>文件变为二进制字节流再变成String字符串</h2><h3 id="打开文件管理器获取文件"><a href="#打开文件管理器获取文件" class="headerlink" title="打开文件管理器获取文件"></a>打开文件管理器获取文件</h3>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/03/09/Android-日常开发常用代码总结/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Android-Studio相关笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/03/07/Android-Studio相关笔记/" class="article-date">
-      <time datetime="2017-03-07T00:39:37.000Z" itemprop="datePublished">2017-03-07</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="如很使用SVN管理代码"><a href="#如很使用SVN管理代码" class="headerlink" title="如很使用SVN管理代码"></a>如很使用SVN管理代码</h2><p>详见<a href="https://www.zhihu.com/question/32298079">android studio SVN</a></p>
-<p>两种svn 上传方式，一种是import 一种是 Share<br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-        <p class="article-more-link">
-          <a href="/2017/03/07/Android-Studio相关笔记/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Android开发笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/03/01/Android开发笔记/" class="article-date">
-      <time datetime="2017-03-01T01:54:55.000Z" itemprop="datePublished">2017-03-01</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/03/09/Android-日常开发常用代码总结/">
+                    Android 日常开发常用代码总结
+                </a>
+            </div>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/01/Android开发笔记/">Android开发笔记</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="eclipse工程转android-studio编码问题"><a href="#eclipse工程转android-studio编码问题" class="headerlink" title="eclipse工程转android studio编码问题"></a>eclipse工程转android studio编码问题</h1><p>1.把AS设置为GBK编码<br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/03/01/Android开发笔记/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-android--UI--ViewPager的伪循环效果" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/02/22/android--UI--ViewPager的伪循环效果/" class="article-date">
-      <time datetime="2017-02-22T13:24:23.000Z" itemprop="datePublished">2017-02-22</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/22/android--UI--ViewPager的伪循环效果/">Android--ViewPager的伪循环效果</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>关于ViewPager的使用<a href="http://blog.csdn.net/lw_zhaoritian/article/details/52431639">http://blog.csdn.net/lw_zhaoritian/article/details/52431639</a></p>
-<hr>
-<p>下面实现ViewPager的循环效果，默认的的ViewPager是不带循环的。所以需要自己写。参考网上例子，实现思路如下。</p>
-<ol>
-<li>首尾添加重复的Fragment</li>
-<li>监听pager变化事件，当变化到新加的Fragment时候进行跳转</li>
-<li>跳转后正常变化，既从最后到最前或最前到最后。<br><img src="http://img.blog.csdn.net/20160918153503533" alt="图片来自互联网">
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/02/22/android--UI--ViewPager的伪循环效果/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-Android插件GsonFormat发生parse err !!" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/02/22/Android插件GsonFormat发生parse err !!/" class="article-date">
-      <time datetime="2017-02-22T11:26:45.000Z" itemprop="datePublished">2017-02-22</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/22/Android插件GsonFormat发生parse err !!/">Android--GsonFormat错误解决</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>使用as插件GsonFormat创建类的时候出现错误:<br><img src="http://img.blog.csdn.net/20161023175728760" alt="这里写图片描述"><br>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/02/22/Android插件GsonFormat发生parse err !!/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-AS常用快捷键大全" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/02/20/AS常用快捷键大全/" class="article-date">
-      <time datetime="2017-02-20T07:29:26.000Z" itemprop="datePublished">2017-02-20</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h1>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android-Studio/">Android Studio</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/02/20/AS常用快捷键大全/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-再见2016-写给即将到来的2017" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/12/31/再见2016-写给即将到来的2017/" class="article-date">
-      <time datetime="2016-12-31T15:15:20.000Z" itemprop="datePublished">2016-12-31</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h1 id="年度总结"><a href="#年度总结" class="headerlink" title="年度总结"></a>年度总结</h1>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/随笔/">随笔</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2016/12/31/再见2016-写给即将到来的2017/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
+
   
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#动手前的准备"><span class="toc-number">2.</span> <span class="toc-text">动手前的准备</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#官方文档地址"><span class="toc-number">2.1.</span> <span class="toc-text">官方文档地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#帐号申请"><span class="toc-number">2.2.</span> <span class="toc-text">帐号申请</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开发"><span class="toc-number">3.</span> <span class="toc-text">开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#先看微信支付，最重要的就是官方提供的demo"><span class="toc-number">3.1.</span> <span class="toc-text">先看微信支付，最重要的就是官方提供的demo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下面看代码实现"><span class="toc-number">3.2.</span> <span class="toc-text">下面看代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#支付宝的接入比微信简单一点，而且支付宝可以有web版。即生成一个web支付页面，客户少吗或者输入信息支付。"><span class="toc-number">3.3.</span> <span class="toc-text">支付宝的接入比微信简单一点，而且支付宝可以有web版。即生成一个web支付页面，客户少吗或者输入信息支付。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发过程"><span class="toc-number">3.4.</span> <span class="toc-text">开发过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码（支付宝的文档比微信好100倍）"><span class="toc-number">3.5.</span> <span class="toc-text">代码（支付宝的文档比微信好100倍）</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"android支付接口接入详解　| 五谷观精分道长博客　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/03/15/android支付接口接入详解/" data-title="android支付接口接入详解" data-url="https://huruwo.github.io/2017/03/15/android支付接口接入详解/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"huruwo"};
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        
+    </script>
+    
+    <script> loadComment(); </script>
+
+</div>
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/03/09/Android-日常开发常用代码总结/" title="下一篇: Android 日常开发常用代码总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/03/15/android支付接口接入详解/">android支付接口接入详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/09/Android-日常开发常用代码总结/">Android 日常开发常用代码总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/07/Android-Studio相关笔记/">Android Studio相关笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/05/斩码师开发日志-初步版本完成/">斩码师开发日志---初步版本完成</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/Android开发笔记/">Android开发笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/android--UI--ViewPager的伪循环效果/">Android--ViewPager的伪循环效果</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/22/Android插件GsonFormat发生parse err !!/">Android--GsonFormat错误解决</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/20/AS常用快捷键大全/">AS常用快捷键大全</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/19/独立开发一款App/">独立开发一款App（斩码师）--初步设想，需求分析，基本架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/31/再见2016-写给即将到来的2017/">再见2016,写给即将到来的2017</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/android--UI--导航条toolbar/">Android--Toolbar使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/25/android--UI---侧滑drawerLayout/">Android--drawerLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android--UI--SwipeRefreshLayout的使用/">Android--SwipeRefreshLayout使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/24/android---UI---RecyclerView实现瀑布流(2)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerView实现瀑布流(1)/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/22/android---UI---RecyclerViewd的基本使用/">Android--RecyclerView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/21/自定义AlertDialog/">自定义AlertDialog--嵌入Listview选择多项</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/18/android--UI--listview使用和优化/">Android--ListView使用和优化策略</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/android--UI--CardView的使用/">Android--CardView使用详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/15/网站访问使用HttpClien出现SSl证书问题/">HttpClient出现SSL证书问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/04/androidstudio---导入jar文件和添加.SO文件/">AndroidStudio导入SO库和Jar文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/02/Android动画学习分析与实践/">Android动画学习分析与实践(1)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/30/使用GitHub-Hexo快速搭建个人技术博客/">使用GitHub+Hexo快速搭建个人技术博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/29/android studio的自定义工程模板详解/">android studio的自定义工程模板详解---让你开发神速的技巧</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(2)---地图功能/">百度地图Api---地图显示</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/09/BaiDu地图API使用全解析--(1)---定位功能/">百度地图Api---定位功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/android获取网页源码接口JSON数据/">Android--GsonFormat错误解决</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
